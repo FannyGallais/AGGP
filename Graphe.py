@@ -17,9 +17,35 @@ class Graphe:
 	
 	def isConnexe(self):
 		return True
+	
+	def degrees(self): 
+		deg={}
+		for i in xrange(self.N+1):
+			deg[i]=0
+		for i in xrange(self.N):
+			deg[sum(self.graphe[i])]+=1
 		
+		print deg	
+		kmin=0
+		kmax=self.N
+		i=0
+		while deg[i]==0:
+			kmin+=1
+			i+=1
+		i=self.N
+		while deg[i]==0:
+			kmax-=1
+			i-=1
+		
+		th=1/(kmax-kmin)
+		sce=0
+		for i in xrange(kmin,kmax+1):
+			sce+=(th-deg[i])**2
+		
+		return sce
 					
 					
 
-g=Graphe(4,0.6)
+g=Graphe(10,0.6)
 print g.graphe
+g.degrees()
