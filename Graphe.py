@@ -186,11 +186,32 @@ class Population:
                 for i in range(self.p):
                        self.population.append(Graphe(tailleGraphe,self.proba))
 
+        def mutation(self):
+                print self.population[0].graphe
+                print ""
+                for i in range(self.p):
+                        
+                        for j in range(self.tailleGraphe):
+                                for k in range(j,self.tailleGraphe):
+                                        pMutation = random.random()
+                                        if pMutation > self.proba :
+                                                if self.population[i].graphe[j,k] == 0:
+                                                        self.population[i].graphe[j,k] = 1
+                                                        self.population[i].graphe[k,j] = 1
+                                                else :
+                                                        self.population[i].graphe[j,k] = 0
+                                                        self.population[i].graphe[k,j] = 0
+                print self.population[0].graphe
+
+        # Est ce qu'on devrait parcourir que la moitie de la matrice ? Par souci d'optimisation 
+        # On fait des mutations ponctuelles ? Ou on fait comme le crossing over et on modifie une portion ?
+        # Pour moi une mutation est ponctuelle :)
 
 
 
 popu = Population(5,0.6,3)
 print ("Graphe pour le premier individu de la population \n",popu.population[0].graphe)
+popu.mutation()
 
 
 
