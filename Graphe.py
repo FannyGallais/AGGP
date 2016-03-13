@@ -122,7 +122,7 @@ class Graphe:
                 return sce
 
         def isConnexe(self):
-                
+
                 # Creation de la matrice identite
                 matrice =np.eye(self.N)
                 # Matrice correspondant a la somme de la matrice identite et de notre graphe
@@ -143,9 +143,17 @@ class Graphe:
                         for j in range(i,self.N):
                                 if temp[i,j] == 0 :
                                         self.connexe = False
-                print self.connexe
+                print temp
+                
 
                 
+        def calculCout(self):
+                sce1 = self.sceDegrees()
+                sce2 = self.sceCk()
+                sce3 = 1
+
+                cout = sce1*sce2*sce3
+                return cout
                 
 
 
@@ -161,4 +169,6 @@ print (g.graphe)
 print ("sceDegree:",g.sceDegrees())
 print ("sceCk:",g.sceCk())
 g.isConnexe()
+print ("calculCout" , g.calculCout())
+
 
