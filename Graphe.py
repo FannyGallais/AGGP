@@ -148,11 +148,17 @@ class Graphe:
 
                 
         def calculCout(self):
+                #On recupere les differents couts des differentes methodes
                 sce1 = self.sceDegrees()
                 sce2 = self.sceCk()
                 sce3 = 1
 
+                #On les multiplie entre elles
                 cout = sce1*sce2*sce3
+
+                #On met a jour le cout du graphe
+                self.cout = cout
+
                 return cout
                 
 
@@ -170,5 +176,20 @@ print ("sceDegree:",g.sceDegrees())
 print ("sceCk:",g.sceCk())
 g.isConnexe()
 print ("calculCout" , g.calculCout())
+
+class Population:
+        def __init__(self,taillePop,proba,tailleGraphe):
+                self.p=taillePop
+                self.proba= proba
+                self.population= []
+                self.tailleGraphe = tailleGraphe
+                for i in range(self.p):
+                       self.population.append(Graphe(tailleGraphe,self.proba))
+
+
+popu = Population(5,0.6,3)
+print popu.population[1].graphe
+
+
 
 
