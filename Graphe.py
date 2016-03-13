@@ -187,8 +187,10 @@ class Population:
                        self.population.append(Graphe(tailleGraphe,self.proba))
 
 
+
+
 popu = Population(5,0.6,3)
-print popu.population[1].graphe
+print ("Graphe pour le premier individu de la population \n",popu.population[0].graphe)
 
 
 
