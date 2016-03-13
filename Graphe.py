@@ -205,7 +205,8 @@ class Population:
 
         # Est ce qu'on devrait parcourir que la moitie de la matrice ? Par souci d'optimisation 
         # On fait des mutations ponctuelles ? Ou on fait comme le crossing over et on modifie une portion ?
-        # Pour moi une mutation est ponctuelle :)
+        # Pour moi une mutation c'est ponctuelle  avec a chaque fois une probabilite differente d'etre au dessus
+        # ou en dessous de la proba et en fonction on mute ou pas :)
 
 
 
