@@ -5,7 +5,7 @@ class Graphe:
         def __init__(self,tailleGraphe,p):
                 self.N=tailleGraphe
                 self.cout=0
-                self.connexe=False
+                self.connexe= True
                 self.graphe=np.zeros((self.N,self.N))
 		#while !self.graphe.isConnexe():
                 for i in range(self.N):
@@ -120,8 +120,45 @@ class Graphe:
                 for i in range(kmin,kmax+1):
                         sce+=(th-Ck[i])**2
                 return sce
+
+        def isConnexe(self):
+                
+                # Creation de la matrice identite
+                matrice =np.eye(self.N)
+                # Matrice correspondant a la somme de la matrice identite et de notre graphe
+                # On cree une matrice temporaire qui sera multiplie au fur et a mesure
+                mat = self.graphe + matrice
+                temp = self.graphe + matrice
+
+                #On fait le produit matriciel n-1 fois 
+                i = 0
+                while i < self.N -1:
+                        temp = np.dot(temp,mat)
+                        i +=1
+
+                #On obtient au final la matrice (A+In) a la puissance n-1
+                #On verifie que tous les coefficients soit different de zeros
+
+                for i in range(self.N):
+                        for j in range(i,self.N):
+                                if temp[i,j] == 0 :
+                                        self.connexe = False
+                print self.connexe
+
+                
+                
+
+
+
+                
+
+                
+               
+
                 
 g=Graphe(5,0.6)
 print (g.graphe)
 print ("sceDegree:",g.sceDegrees())
 print ("sceCk:",g.sceCk())
+g.isConnexe()
+
