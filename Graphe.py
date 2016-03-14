@@ -7,15 +7,16 @@ class Graphe:
         def __init__(self,tailleGraphe,p):
                 self.N=tailleGraphe
                 self.cout=0
-                self.connexe= True
+                self.connexe= False
                 self.graphe=np.zeros((self.N,self.N))
-		#while !self.graphe.isConnexe():
-                for i in range(self.N):
-                    for j in range(i,self.N):
-                        if random.random()<p and i != j:
-                            self.graphe[i,j]=1
-                            self.graphe[j,i]=1
-                            
+                while self.connexe==False:
+					for i in range(self.N):
+						for j in range(i,self.N):
+							if random.random()<p and i != j:
+								self.graphe[i,j]=1
+								self.graphe[j,i]=1
+					self.connexe=self.isConnexe()
+								
 
         def nodesAndEdges(self):
             nodes = []
@@ -27,9 +28,6 @@ class Graphe:
                             edges.append((i,j))
             return (nodes,edges)
 
-
-        def isConnexe(self):
-                return True
 
         def degrees(self):
                 deg={}
@@ -135,6 +133,7 @@ class Graphe:
                 for i in range(kmin,kmax+1):
                         sce+=(th-Ck[i])**2
                 return sce
+                
 
         def isConnexe(self):
 
@@ -157,8 +156,8 @@ class Graphe:
                 for i in range(self.N):
                         for j in range(i,self.N):
                                 if temp[i,j] == 0 :
-                                        self.connexe = False
-                print temp
+                                        return False
+                return True
                 
 
                 
@@ -208,6 +207,7 @@ pos = nx.spring_layout(G,scale=1) #default to scale=1
 nx.draw(G,pos, with_labels=True)
 plt.show()
 
+
 class Population:
         def __init__(self,taillePop,proba,tailleGraphe):
                 self.p=taillePop
@@ -240,8 +240,7 @@ class Population:
         # ou en dessous de la proba et en fonction on mute ou pas :)
 
 
-
-popu = Population(5,0.6,3)
+popu = Population(10,0.6,3)
 print ("Graphe pour le premier individu de la population \n",popu.population[0].graphe)
 popu.mutation()
 
