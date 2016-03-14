@@ -1,5 +1,7 @@
 import numpy as np
 import random
+import networkx as nx
+import matplotlib.pyplot as plt
 
 class Graphe:
         def __init__(self,tailleGraphe,p):
@@ -9,10 +11,23 @@ class Graphe:
                 self.graphe=np.zeros((self.N,self.N))
 		#while !self.graphe.isConnexe():
                 for i in range(self.N):
-                        for j in range(i,self.N):
-                                if random.random()<p and i != j:
-                                        self.graphe[i,j]=1
-                                        self.graphe[j,i]=1
+                    for j in range(i,self.N):
+                        if random.random()<p and i != j:
+                            self.graphe[i,j]=1
+                            self.graphe[j,i]=1
+                            
+
+        def nodesAndEdges(self):
+            nodes = []
+            edges = []
+            for i in range(self.N):
+                    nodes.append(i)
+                    for j in range(i,self.N):
+                        if self.graphe[i,j]==1:
+                            edges.append((i,j))
+            return (nodes,edges)
+
+
         def isConnexe(self):
                 return True
 
@@ -166,7 +181,9 @@ class Graphe:
 
                 
 
-                
+G=nx.dodecahedral_graph()
+nx.draw(G) 
+plt.draw()             
                
 
                 
@@ -176,6 +193,20 @@ print ("sceDegree:",g.sceDegrees())
 print ("sceCk:",g.sceCk())
 g.isConnexe()
 print ("calculCout" , g.calculCout())
+
+
+nodes = g.nodesAndEdges()[0]
+edges = g.nodesAndEdges()[1]
+print ("Edge",edges)
+print ("Nodes",nodes)
+
+
+G=nx.dodecahedral_graph()  
+G.add_nodes_from(nodes)
+G.add_edges_from(edges)
+pos = nx.spring_layout(G,scale=1) #default to scale=1
+nx.draw(G,pos, with_labels=True)
+plt.show()
 
 class Population:
         def __init__(self,taillePop,proba,tailleGraphe):
