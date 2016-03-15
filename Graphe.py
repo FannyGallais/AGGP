@@ -200,7 +200,7 @@ G.add_nodes_from(nodes)
 G.add_edges_from(edges)
 print G.number_of_nodes()
 print G.number_of_edges()
-nx.draw(G,node_color="pink")
+nx.draw(G,node_color="pink") # ROSE bien evidemment ;)
 plt.show()
 
 
@@ -266,6 +266,9 @@ class Population:
             return bestCostSelect
 
         def croisement(self):
+
+            # Duplication de la population avec le meilleur cout
+
             bestPop = self.selection()
             dupBestPop = []
             for i in range(len(bestPop)):
@@ -274,13 +277,52 @@ class Population:
                 dupBestPop.append(bestPop[i])
 
             print "dupBestPop Graphe \n",dupBestPop[2].graphe
+
+
+            # On obtient ainsi une population de graphe avec une duplication des meilleurs
+            # Issue de la methode selection qui prend la moitie des meilleurs
+
+            ## Mise en place du croisement entre les differents individus 
+            # Quel graphe croise avec quel graphe ? 
+
+            g1 = random.randint(0,len(dupBestPop))
+            g2 = random.randint(0,len(dupBestPop))
+
+            while g1 == g2 : 
+                g2 = random.randint(0,len(dupBestPop))
+
+            print "Valeurs de g1/g2 \n",g1,g2
+            #Puis on choisit aleatoirement les positions qui vont etre croises :
+            pos1 = random.randint(0,dupBestPop[0].N)
+            pos2 = random.randint(0,dupBestPop[0].N)
+            while pos1 == pos2 : 
+                pos2 = random.randint(0,dupBestPop[0].N)
+
+            print "Valeurs de pos1/pos2 \n",pos1,pos2
+
+            p1 = min(pos1,pos2)
+            p2 = max(pos1,pos2)
+
+            # Mise en place du croisement:
+            graphe1 = dupBestPop[g1].graphe
+            graphe2 = dupBestPop[g2].graphe
+
+            print "Les deux graphes a croises sont \n",graphe1,graphe2
+
+            
+
+       
+
+
+
+
         
 
 
 
 
 
-popu = Population(10,0.6,3)
+popu = Population(10,0.6,10)
 print ("Graphe pour le premier individu de la population \n",popu.population[0].graphe)
 popu.mutation()
 meilleurcout = popu.selection()
