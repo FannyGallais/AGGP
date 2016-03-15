@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 class Graphe:
         def __init__(self,tailleGraphe,p):
                 self.N=tailleGraphe
-                self.cout=0
+                self.cout= random.randint(0,self.N)
                 self.connexe= False
                 self.graphe=np.zeros((self.N,self.N))
                 while self.connexe==False:
@@ -230,6 +230,7 @@ class Population:
                                                         self.population[i].graphe[k,j] = 0
                 print self.population[0].graphe
 
+
         def selection(self):
 
             bestCost = []
@@ -253,7 +254,7 @@ class Population:
             for k in range((self.p)/2):
                 bestCostSelect.append(bestCost[k])
 
-            print bestCostSelect
+            #print bestCostSelect
 
             return bestCostSelect
         
@@ -262,22 +263,12 @@ class Population:
 
 
 
-
-        # Est ce qu'on devrait parcourir que la moitie de la matrice ? Par souci d'optimisation 
-        # On fait des mutations ponctuelles ? Ou on fait comme le crossing over et on modifie une portion ?
-        # Pour moi une mutation c'est ponctuelle  avec a chaque fois une probabilite differente d'etre au dessus
-        # ou en dessous de la proba et en fonction on mute ou pas :)
-
-
-<<<<<<< HEAD
-
-popu = Population(6,0.6,3)
-=======
 popu = Population(10,0.6,3)
->>>>>>> 729cec2757ff69deeab17f4aaa48f7b69831e32a
 print ("Graphe pour le premier individu de la population \n",popu.population[0].graphe)
 popu.mutation()
-popu.selection()
+meilleurcout = popu.selection()
+# for i in range(len(meilleurcout)):
+#     print meilleurcout[i].cout
 
 
 
