@@ -284,19 +284,19 @@ class Population:
 
             ## Mise en place du croisement entre les differents individus 
             # Quel graphe croise avec quel graphe ? 
-
-            g1 = random.randint(0,len(dupBestPop))
-            g2 = random.randint(0,len(dupBestPop))
+            l1 = random.randint(0,len(dupBestPop)-1)
+            g1 = random.randint(0,len(dupBestPop)-1)
+            g2 = random.randint(0,len(dupBestPop)-1)
 
             while g1 == g2 : 
-                g2 = random.randint(0,len(dupBestPop))
-
+                g2 = random.randint(0,len(dupBestPop)-1)
+            print "l1",l1
             print "Valeurs de g1/g2 \n",g1,g2
             #Puis on choisit aleatoirement les positions qui vont etre croises :
-            pos1 = random.randint(0,dupBestPop[0].N)
-            pos2 = random.randint(0,dupBestPop[0].N)
+            pos1 = random.randint(0,dupBestPop[0].N-1)
+            pos2 = random.randint(0,dupBestPop[0].N-1)
             while pos1 == pos2 : 
-                pos2 = random.randint(0,dupBestPop[0].N)
+                pos2 = random.randint(0,dupBestPop[0].N-1)
 
             print "Valeurs de pos1/pos2 \n",pos1,pos2
 
@@ -306,15 +306,31 @@ class Population:
             # Mise en place du croisement:
             graphe1 = dupBestPop[g1].graphe
             graphe2 = dupBestPop[g2].graphe
+            temp1 = dupBestPop[g1].graphe
+            temp2 = dupBestPop[g2].graphe
 
-            print "Les deux graphes a croises sont \n",graphe1,graphe2
+            print "Les deux graphes a croises sont \n"
+            print "g1" , graphe1
+            print ""
+            print "g2" ,graphe2
 
-            
+            for i in range(g1,g2):
+                print i
+                #On modifie le premier graphe
+                print "GRAPHE",graphe1[l1,i]
+                print "GRAPHE2",temp2[l1,i]
+                graphe1[l1,i] = temp2[l1,i]
+                graphe1[i,l1] = temp2[i,l1]
 
-       
+                #Puis le deuxieme graphe
 
+                graphe2[l1,i] = temp1[l1,i]
+                graphe2[i,l1] = temp1[i,l1]
 
-
+            print "Les deux graphes a croises sont \n"
+            print "g1" , graphe1
+            print ""
+            print "g2" ,graphe2
 
         
 
@@ -329,6 +345,7 @@ meilleurcout = popu.selection()
 popu.croisement()
 # for i in range(len(meilleurcout)):
 #     print meilleurcout[i].cout
+
 
 
 
