@@ -314,6 +314,8 @@ class Population:
             print ""
             print "g2" ,graphe2
 
+            # POURQUOI NE RENTRE IL PAS DANS LA BOUCLE ???? 
+            
             for i in range(g1,g2):
                 print i
                 #On modifie le premier graphe
