@@ -181,13 +181,8 @@ class Graphe:
 
                 
 
-G=nx.dodecahedral_graph()
-nx.draw(G) 
-plt.draw()             
-               
-
                 
-g=Graphe(5,0.6)
+g=Graphe(10,0.6)
 print (g.graphe)
 print ("sceDegree:",g.sceDegrees())
 print ("sceCk:",g.sceCk())
@@ -201,11 +196,12 @@ print ("Edge",edges)
 print ("Nodes",nodes)
 
 
-G=nx.dodecahedral_graph()  
+G=nx.Graph()  
 G.add_nodes_from(nodes)
 G.add_edges_from(edges)
-pos = nx.spring_layout(G,scale=1) #default to scale=1
-nx.draw(G,pos, with_labels=True)
+print G.number_of_nodes()
+print G.number_of_edges()
+nx.draw(G,node_color="pink")
 plt.show()
 
 class Population:
@@ -234,6 +230,39 @@ class Population:
                                                         self.population[i].graphe[k,j] = 0
                 print self.population[0].graphe
 
+        def selection(self):
+
+            bestCost = []
+            bestCostSelect = []
+            indice = []
+            ind = 0
+            temp = self.population[0].cout
+
+            for i in range(self.p):
+                for j in range(self.p):
+                    if i != j : 
+                        if self.population[j].cout >= temp :
+                            #On verifie que ce cout n est pas deja ete selectionne
+                            if j not in indice:
+                                temp = self.population[j]
+                                ind = j 
+                #On remplis notre liste des meilleurs couts.
+                bestCost.append(temp)
+                indice.append(ind)
+
+            for k in range((self.p)/2):
+                bestCostSelect.append(bestCost[k])
+
+            print bestCostSelect
+
+            return bestCostSelect
+        
+
+
+
+
+
+
         # Est ce qu'on devrait parcourir que la moitie de la matrice ? Par souci d'optimisation 
         # On fait des mutations ponctuelles ? Ou on fait comme le crossing over et on modifie une portion ?
         # Pour moi une mutation c'est ponctuelle  avec a chaque fois une probabilite differente d'etre au dessus
@@ -241,9 +270,10 @@ class Population:
 
 
 
-popu = Population(5,0.6,3)
+popu = Population(6,0.6,3)
 print ("Graphe pour le premier individu de la population \n",popu.population[0].graphe)
 popu.mutation()
+popu.selection()
 
 
 
