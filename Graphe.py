@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 class Graphe:
         def __init__(self,tailleGraphe,p):
                 self.N=tailleGraphe
-                self.cout= random.randint(0,self.N)
+                self.cout= random.randint(0,self.N) # En attendant d'avoir le vrai cout
                 self.connexe= False
                 self.graphe=np.zeros((self.N,self.N))
                 while self.connexe==False:
@@ -204,6 +204,13 @@ nx.draw(G,node_color="pink")
 plt.show()
 
 
+
+####################################################################################
+##                                                                                ## 
+##                            CLASS POPULATION                                    ##
+##                                                                                ## 
+####################################################################################
+
 class Population:
         def __init__(self,taillePop,proba,tailleGraphe):
                 self.p=taillePop
@@ -257,6 +264,16 @@ class Population:
             #print bestCostSelect
 
             return bestCostSelect
+
+        def croisement(self):
+            bestPop = self.selection()
+            dupBestPop = []
+            for i in range(len(bestPop)):
+                dupBestPop.append(bestPop[i])
+            for j in range(len(bestPop)):
+                dupBestPop.append(bestPop[i])
+
+            print "dupBestPop Graphe \n",dupBestPop[2].graphe
         
 
 
@@ -267,6 +284,7 @@ popu = Population(10,0.6,3)
 print ("Graphe pour le premier individu de la population \n",popu.population[0].graphe)
 popu.mutation()
 meilleurcout = popu.selection()
+popu.croisement()
 # for i in range(len(meilleurcout)):
 #     print meilleurcout[i].cout
 
