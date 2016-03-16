@@ -302,65 +302,84 @@ class Population:
             dupBestPop = []
             for i in range(len(bestPop)):
                 dupBestPop.append(bestPop[i])
-            for j in range(len(bestPop)):
-                dupBestPop.append(bestPop[i])
+            #for j in range(len(bestPop)):
+            #    dupBestPop.append(bestPop[i])
 
-            print "dupBestPop Graphe \n",dupBestPop[2].graphe
+            #print "dupBestPop Graphe \n",dupBestPop[2].graphe
 
 
             # On obtient ainsi une population de graphe avec une duplication des meilleurs
             # Issue de la methode selection qui prend la moitie des meilleurs
 
-            ## Mise en place du croisement entre les differents individus 
-            # Quel graphe croise avec quel graphe ? 
-            l1 = random.randint(0,len(dupBestPop)-1)
-            g1 = random.randint(0,len(dupBestPop)-1)
-            g2 = random.randint(0,len(dupBestPop)-1)
+            for k in range(4):
 
-            while g1 == g2 : 
+                ## MISE EN PLACE DE LA MUTATION  mutation 
+
+                #dupBestPop.mutation()
+
+                # CROSSING OVER
+
+                ## Mise en place du croisement entre les differents individus 
+                # Quel graphe croise avec quel graphe ? 
+                l1 = random.randint(0,len(dupBestPop)-1)
+                g1 = random.randint(0,len(dupBestPop)-1)
                 g2 = random.randint(0,len(dupBestPop)-1)
-            print "l1",l1
-            print "Valeurs de g1/g2 \n",g1,g2
-            #Puis on choisit aleatoirement les positions qui vont etre croises :
-            pos1 = random.randint(0,dupBestPop[0].N-1)
-            pos2 = random.randint(0,dupBestPop[0].N-1)
-            while pos1 == pos2 : 
+
+                while g1 == g2 : 
+                    g2 = random.randint(0,len(dupBestPop)-1)
+                #print "l1",l1
+                #print "Valeurs de g1/g2 \n",g1,g2
+                #Puis on choisit aleatoirement les positions qui vont etre croises :
+                pos1 = random.randint(0,dupBestPop[0].N-1)
                 pos2 = random.randint(0,dupBestPop[0].N-1)
+                while pos1 == pos2 : 
+                    pos2 = random.randint(0,dupBestPop[0].N-1)
 
-            print "Valeurs de pos1/pos2 \n",pos1,pos2
+                #print "Valeurs de pos1/pos2 \n",pos1,pos2
 
-            p1 = min(pos1,pos2)
-            p2 = max(pos1,pos2)
+                p1 = min(pos1,pos2)
+                p2 = max(pos1,pos2)
 
-            # Mise en place du croisement:
-            graphe1 = dupBestPop[g1].graphe
-            graphe2 = dupBestPop[g2].graphe
-            temp1 = dupBestPop[g1].graphe
-            temp2 = dupBestPop[g2].graphe
+                # Mise en place du croisement:
+                graphe1 = dupBestPop[g1].graphe
+                graphe2 = dupBestPop[g2].graphe
+                temp1 = np.copy(graphe1)
+                temp2 = np.copy(graphe2)
 
-            print "Les deux graphes a croises sont \n"
-            print "g1" , graphe1
-            print ""
-            print "g2" ,graphe2
+                # print "Les deux graphes a croises sont \n"
+                # print "g1" , graphe1
+                # print ""
+                # print "g2" ,graphe2
 
 
-            
-            for i in range(p1,p2+1):
                 
-                #On modifie le premier graphe
-               
-                graphe1[l1,i] = temp2[l1,i]
-                graphe1[i,l1] = temp2[i,l1]
+                for i in range(p1,p2+1):
+                    
+                    #On modifie le premier graphe
+                   
+                    graphe1[l1,i] = temp2[l1,i]
+                    graphe1[i,l1] = temp2[i,l1]
 
-                #Puis le deuxieme graphe
+                    #Puis le deuxieme graphe
 
-                graphe2[l1,i] = temp1[l1,i]
-                graphe2[i,l1] = temp1[i,l1]
+                    graphe2[l1,i] = temp1[l1,i]
+                    graphe2[i,l1] = temp1[i,l1]
 
-            print "Les deux graphes a croises sont \n"
-            print "g1" , graphe1
-            print ""
-            print "g2" ,graphe2
+                # Puis on remplace par les nouveaux graphes dans la population que l'on croise.    
+                dupBestPop[g1].graphe = graphe1
+                dupBestPop[g2].graphe = graphe2
+
+
+                # print "Les deux graphes a croises sont \n"
+                # print "g1" , graphe1
+                # print ""
+                # print "g2" ,graphe2
+
+            #La nouvelle population contient les anciens meilleurs, puis les nouveaux 
+            # Qui sont remanier 
+            newPop = []
+            newPop.append(bestPop)
+            newPop.append(dupBestPop)
 
         
 
@@ -369,7 +388,7 @@ class Population:
 
 
 popu = Population(10,0.6,10)
-print ("Graphe pour le premier individu de la population \n",popu.population[0].graphe)
+#print ("Graphe pour le premier individu de la population \n",popu.population[0].graphe)
 popu.mutation()
 meilleurcout = popu.selection()
 popu.croisement()
