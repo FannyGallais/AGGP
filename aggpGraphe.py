@@ -249,22 +249,19 @@ class Population:
                 for i in range(self.p):
                        self.population.append(Graphe(tailleGraphe,self.proba))
 
-        def mutation(self):
-                print self.population[0].graphe
-                print ""
-                for i in range(self.p):
-                        
-                        for j in range(self.tailleGraphe):
-                                for k in range(j,self.tailleGraphe):
-                                        pMutation = random.random()
-                                        if pMutation > self.proba :
-                                                if self.population[i].graphe[j,k] == 0:
-                                                        self.population[i].graphe[j,k] = 1
-                                                        self.population[i].graphe[k,j] = 1
-                                                else :
-                                                        self.population[i].graphe[j,k] = 0
-                                                        self.population[i].graphe[k,j] = 0
-                print self.population[0].graphe
+        def mutation(self,matrice):
+
+            for j in range(self.tailleGraphe):
+                for k in range(j,self.tailleGraphe):
+                        pMutation = random.random()
+                        if pMutation > self.proba :
+                                if matrice[j,k] == 0:
+                                        matrice[j,k] = 1
+                                        matrice[k,j] = 1
+                                else :
+                                        matrice[j,k] = 0
+                                        matrice[k,j] = 0
+              
 
 
         def selection(self):
@@ -314,8 +311,8 @@ class Population:
             for k in range(4):
 
                 ## MISE EN PLACE DE LA MUTATION  mutation 
-
-                #dupBestPop.mutation()
+                for l in range(len(dupBestPop)):
+                    self.mutation(dupBestPop[l].graphe)
 
                 # CROSSING OVER
 
@@ -389,7 +386,6 @@ class Population:
 
 popu = Population(10,0.6,10)
 #print ("Graphe pour le premier individu de la population \n",popu.population[0].graphe)
-popu.mutation()
 meilleurcout = popu.selection()
 popu.croisement()
 # for i in range(len(meilleurcout)):
