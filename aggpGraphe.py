@@ -16,6 +16,10 @@ class Graphe:
 								self.graphe[i,j]=1
 								self.graphe[j,i]=1
 					self.connexe=self.isConnexe()
+					test = self.isConnexe2()
+					#pour verifier que les deux methodes isConnexe donnent les memes resultats
+					if self.connexe!= test:
+						print "ERROR"
 								
 
         def nodesAndEdges(self):
@@ -163,7 +167,32 @@ class Graphe:
                 #print temp
                 return True
                 
-                # Amelioration possible produit matrice et mettre un 1
+                
+        def isConnexe2(self):
+			matrice =np.eye(self.N)
+			mat = self.graphe + matrice
+			temp = self.graphe + matrice
+			temp2 = self.graphe + matrice
+			
+			k=0
+			while k < self.N -1 :
+				for p in xrange(self.N):
+					for i in xrange(self.N):
+						somme=0
+						for j in xrange(self.N):
+							somme=somme+temp[i,j]*mat[j,p]
+						#on met 1 si on a une position differente de zeros 
+						if somme !=0:
+							temp[i,p] = 1
+						#a la derniere boucle on regarde si on a des zeros si oui on retourne false
+						if somme == 0 and k==self.N-2:
+							self.connexe = False
+							return False
+				#actualisation de temp pour le prochain produit matriciel
+				temp=np.copy(temp2)
+				k+=1
+			self.connexe = True
+			return True
 
         def calcShortestPath(self):
             matSP=float("inf")*np.ones((self.N,self.N))
@@ -392,6 +421,38 @@ popu.croisement()
 #     print meilleurcout[i].cout
 
 
+'''
+#pour tester le produit matriciel
+G1=Graphe(5,0.6)
+g1= G1.graphe
 
 
+matrice = np.eye(5)
+mat = g1 + matrice
+temp = g1 + matrice
+temp2= g1+matrice
+print mat,"\n",temp
+			
+d=[]
+for p in xrange(5):
+	for i in xrange(5):
+		somme=0
+		for j in xrange(5):
+			somme=somme+temp[i,j]*mat[j,p]
+		if somme !=0:
+			temp2[i,p] = somme
+		d.append(somme)
+temp=np.copy(temp2)
+		
+print d
+print temp
 
+#erreur qui survient de temps en temps
+
+Traceback (most recent call last):
+  File "aggpGraphe.py", line 411, in <module>
+    popu.croisement()
+  File "aggpGraphe.py", line 336, in croisement
+    self.mutation(dupBestPop[l].graphe)
+AttributeError: 'int' object has no attribute 'graphe'
+'''
