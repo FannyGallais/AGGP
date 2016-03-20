@@ -9,6 +9,7 @@ class Graphe:
                 self.cout= random.randint(0,self.N) # En attendant d'avoir le vrai cout
                 self.connexe= False
                 self.graphe=np.zeros((self.N,self.N))
+                self.proba=p
                 while self.connexe==False:
 					for i in range(self.N):
 						for j in range(i,self.N):
@@ -235,7 +236,7 @@ class Graphe:
 
 
                 
-
+"""
                 
 g=Graphe(10,0.6)
 print (g.graphe)
@@ -261,7 +262,7 @@ print G.number_of_edges()
 nx.draw(G,node_color="pink") # ROSE bien evidemment ;)
 plt.show()
 
-
+"""
 
 ####################################################################################
 ##                                                                                ## 
@@ -295,40 +296,40 @@ class Population:
 
         def selection(self):
 
-            bestCost = []
-            bestCostSelect = []
-            indice = []
-            ind = 0
-            temp = self.population[0].cout
+			Cost = []
+			bestCost=[]
+			bestCostSelect = []
+			dico={}
 
-            for i in range(self.p):
-                for j in range(self.p):
-                    if i != j : 
-                        if self.population[j].cout >= temp :
-                            #On verifie que ce cout n est pas deja ete selectionne
-                            if j not in indice:
-                                temp = self.population[j]
-                                ind = j 
-                #On remplis notre liste des meilleurs couts.
-                bestCost.append(temp)
-                indice.append(ind)
+			for i in xrange(self.p):
+				Cost.append(self.population[i].cout)
+				if self.population[i].cout in dico:
+					dico[self.population[i].cout].append(i)
+				else:
+					dico[self.population[i].cout]=[i]
+					
+			Cost=sorted(Cost)
+			
+			for k in xrange(len(Cost)):
+				indGraphe=dico[Cost[k]][0]
+				bestCost.append(self.population[indGraphe])
+				dico[Cost[k]].remove(indGraphe)
+		
 
-            for k in range((self.p)/2):
-                bestCostSelect.append(bestCost[k])
+			for j in xrange((self.p)/2):
+				bestCostSelect.append(bestCost[j])
 
-            #print bestCostSelect
+			return bestCostSelect
 
-            return bestCostSelect
-
-        def croisement(self):
-
+        def croisement(self,dupBestPop,nbCrois):
+			"""
             # Duplication de la population avec le meilleur cout
 
             bestPop = self.selection()
             dupBestPop = []
             for i in range(len(bestPop)):
                 dupBestPop.append(bestPop[i])
-            #for j in range(len(bestPop)):
+            #for j in xrange(len(bestPop)):
             #    dupBestPop.append(bestPop[i])
 
             #print "dupBestPop Graphe \n",dupBestPop[2].graphe
@@ -336,88 +337,150 @@ class Population:
 
             # On obtient ainsi une population de graphe avec une duplication des meilleurs
             # Issue de la methode selection qui prend la moitie des meilleurs
+"""
+			for k in xrange(nbCrois):
+				"""
+				## MISE EN PLACE DE LA MUTATION  mutation 
+				for l in xrange(len(dupBestPop)):
+					self.mutation(dupBestPop[l].graphe)
+				"""
+				# CROSSING OVER
 
-            for k in range(4):
+				## Mise en place du croisement entre les differents individus 
+				# Quel graphe croise avec quel graphe ? 
+				l1 = random.randint(0,len(dupBestPop)-1)
+				g1 = random.randint(0,len(dupBestPop)-1)
+				g2 = random.randint(0,len(dupBestPop)-1)
 
-                ## MISE EN PLACE DE LA MUTATION  mutation 
-                for l in range(len(dupBestPop)):
-                    self.mutation(dupBestPop[l].graphe)
+				while g1 == g2 : 
+					g2 = random.randint(0,len(dupBestPop)-1)
+				#print "l1",l1
+				#print "Valeurs de g1/g2 \n",g1,g2
+				#Puis on choisit aleatoirement les positions qui vont etre croises :
+				pos1 = random.randint(0,dupBestPop[0].N-1)
+				pos2 = random.randint(0,dupBestPop[0].N-1)
+				while pos1 == pos2 : 
+					pos2 = random.randint(0,dupBestPop[0].N-1)
 
-                # CROSSING OVER
+				#print "Valeurs de pos1/pos2 \n",pos1,pos2
 
-                ## Mise en place du croisement entre les differents individus 
-                # Quel graphe croise avec quel graphe ? 
-                l1 = random.randint(0,len(dupBestPop)-1)
-                g1 = random.randint(0,len(dupBestPop)-1)
-                g2 = random.randint(0,len(dupBestPop)-1)
+				p1 = min(pos1,pos2)
+				p2 = max(pos1,pos2)
 
-                while g1 == g2 : 
-                    g2 = random.randint(0,len(dupBestPop)-1)
-                #print "l1",l1
-                #print "Valeurs de g1/g2 \n",g1,g2
-                #Puis on choisit aleatoirement les positions qui vont etre croises :
-                pos1 = random.randint(0,dupBestPop[0].N-1)
-                pos2 = random.randint(0,dupBestPop[0].N-1)
-                while pos1 == pos2 : 
-                    pos2 = random.randint(0,dupBestPop[0].N-1)
+				# Mise en place du croisement:
+				graphe1 = dupBestPop[g1].graphe
+				graphe2 = dupBestPop[g2].graphe
+				temp1 = np.copy(graphe1)
+				temp2 = np.copy(graphe2)
 
-                #print "Valeurs de pos1/pos2 \n",pos1,pos2
-
-                p1 = min(pos1,pos2)
-                p2 = max(pos1,pos2)
-
-                # Mise en place du croisement:
-                graphe1 = dupBestPop[g1].graphe
-                graphe2 = dupBestPop[g2].graphe
-                temp1 = np.copy(graphe1)
-                temp2 = np.copy(graphe2)
-
-                # print "Les deux graphes a croises sont \n"
-                # print "g1" , graphe1
-                # print ""
-                # print "g2" ,graphe2
-
-
-                
-                for i in range(p1,p2+1):
-                    
-                    #On modifie le premier graphe
-                   
-                    graphe1[l1,i] = temp2[l1,i]
-                    graphe1[i,l1] = temp2[i,l1]
-
-                    #Puis le deuxieme graphe
-
-                    graphe2[l1,i] = temp1[l1,i]
-                    graphe2[i,l1] = temp1[i,l1]
-
-                # Puis on remplace par les nouveaux graphes dans la population que l'on croise.    
-                dupBestPop[g1].graphe = graphe1
-                dupBestPop[g2].graphe = graphe2
+				# print "Les deux graphes a croises sont \n"
+				# print "g1" , graphe1
+				# print ""
+				# print "g2" ,graphe2
 
 
-                # print "Les deux graphes a croises sont \n"
-                # print "g1" , graphe1
-                # print ""
-                # print "g2" ,graphe2
+				
+				for i in xrange(p1,p2+1):
+					
+					#On modifie le premier graphe
+				   
+					graphe1[l1,i] = temp2[l1,i]
+					graphe1[i,l1] = temp2[i,l1]
 
-            #La nouvelle population contient les anciens meilleurs, puis les nouveaux 
-            # Qui sont remanier 
-            newPop = []
-            newPop.append(bestPop)
-            newPop.append(dupBestPop)
+					#Puis le deuxieme graphe
 
-        
+					graphe2[l1,i] = temp1[l1,i]
+					graphe2[i,l1] = temp1[i,l1]
 
-
-
+				# Puis on remplace par les nouveaux graphes dans la population que l'on croise.    
+				dupBestPop[g1].graphe = graphe1
+				dupBestPop[g2].graphe = graphe2
 
 
-popu = Population(10,0.6,10)
-#print ("Graphe pour le premier individu de la population \n",popu.population[0].graphe)
-meilleurcout = popu.selection()
-popu.croisement()
-# for i in range(len(meilleurcout)):
+				# print "Les deux graphes a croises sont \n"
+				# print "g1" , graphe1
+				# print ""
+				# print "g2" ,graphe2
+
+			#La nouvelle population contient les anciens meilleurs, puis les nouveaux 
+			# Qui sont remanier 
+			#newPop = []
+			#newPop.append(bestPop)
+			#newPop.append(dupBestPop)
+			return dupBestPop
+
+
+####################################################################################
+##                                                                                ## 
+##                            CLASS SIMULATION                                    ##
+##                                                                                ## 
+####################################################################################
+
+
+class Simulation:
+	def __init__(self,pop,seuil,nbCrois):
+		self.pop=pop
+		self.seuil=seuil
+		self.nbCrois=nbCrois
+	
+	def coutMin_Max(self):
+		couts=[]
+		for i in xrange(len(self.pop.population)):
+			couts.append(self.pop.population[i].cout)
+		return min(couts),max(couts)
+		
+	def arret(self):
+		stop=False
+		#print "difference coutMax-coutMin",self.coutMin_Max()[1]-self.coutMin_Max()[0]
+		if self.coutMin_Max()[1]-self.coutMin_Max()[0]<self.seuil:
+			stop=True
+		return stop
+		
+	def duplicate(self,l):
+		l2=[]
+		for i in xrange(len(l)):
+			G=Graphe(l[i].N,l[i].proba)
+			G.graphe=np.copy(l[i].graphe)
+			l2.append(G)
+		return l2
+		
+	def generation(self):
+		while not self.arret():
+			#SELECTION
+
+			popSelect=self.pop.selection()
+			
+			temp=self.duplicate(popSelect)
+			#temp=np.copy(popSelect)
+
+			#MUTATION
+			for i in xrange(len(popSelect)):
+				self.pop.mutation(popSelect[i].graphe)
+			
+			#CROISEMENT
+			self.pop.croisement(popSelect,self.nbCrois)
+			
+			#MAJ DE LA POP
+			for k in xrange(self.pop.p/2):
+				self.pop.population[k]=temp[k]
+				self.pop.population[k+self.pop.p/2]=popSelect[k]
+
+	
+			
+
+
+
+popu = Population(20,0.6,10)
+
+
+
+
+simul=Simulation(popu,10,5)
+simul.generation()
+
+
+
+# for i in xrange(len(meilleurcout)):
 #     print meilleurcout[i].cout
 
 
