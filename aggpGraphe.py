@@ -423,6 +423,7 @@ class Simulation:
 		self.pop=pop
 		self.seuil=seuil
 		self.nbCrois=nbCrois
+
 	
 	def coutMin_Max(self):
 		couts=[]
@@ -430,12 +431,12 @@ class Simulation:
 			couts.append(self.pop.population[i].cout)
 		return min(couts),max(couts)
 		
-	def arret(self):
-		stop=False
-		#print "difference coutMax-coutMin",self.coutMin_Max()[1]-self.coutMin_Max()[0]
-		if self.coutMin_Max()[1]-self.coutMin_Max()[0]<self.seuil:
-			stop=True
-		return stop
+	# def arret(self):
+	# 	stop=False
+	# 	#print "difference coutMax-coutMin",self.coutMin_Max()[1]-self.coutMin_Max()[0]
+	# 	if self.coutMin_Max()[1]-self.coutMin_Max()[0]<self.seuil:
+	# 		stop=True
+	# 	return stop
 		
 	def duplicate(self,l):
 		l2=[]
@@ -447,7 +448,7 @@ class Simulation:
 		
 	def generation(self):
 		compt=0 #compteur
-		while not self.arret():
+		while compt < seuil:
 			#SELECTION
 
 			popSelect=self.pop.selection()
