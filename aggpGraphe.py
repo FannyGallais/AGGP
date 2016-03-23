@@ -72,7 +72,7 @@ class Graphe:
                         sce+=(th[i]-(deg[i]/self.N))**2
 
                 degObs = np.asarray(deg.values()) * (1/float(self.N))
-                print "deg",degObs
+                #print "deg",degObs
 
                 return (sce,th,degObs)
 
@@ -91,7 +91,7 @@ class Graphe:
                         for j in xrange(self.N):
                                 if self.graphe[i,j]==1:
                                         dicoN[i].append(j)
-                print("dicoN:",dicoN)
+                #print("dicoN:",dicoN)
 
                 #on stocke dans ni le nombres de liens entre les voisins d'un noeuds
                 for i in xrange(self.N):
@@ -104,7 +104,7 @@ class Graphe:
                                                         n+=1
                         ni[i]=n
 
-                print ("ni:",ni)
+                #print ("ni:",ni)
                 
                 for i in xrange(self.N):
                         if sum(self.graphe[i])!=0 and sum(self.graphe[i])!=1:
@@ -126,10 +126,11 @@ class Graphe:
 
                 #print (Ck)
                 sce=0
-                th =[]
+                th = []
+                th.append(0)
                 for i in xrange(len(Ck)-1):
-                    th[i] = 1/(i+1)
-                    sce+=(th[i]-Ck[i+1])**2
+                    th.append(1/float((i+1)))
+                    sce+=(th[i+1]-Ck[i+1])**2
                 print "Ck theorique" , th
                 return sce
                 
@@ -479,14 +480,16 @@ class Simulation:
 				self.pop.population[k]=popSelect[k]
 				
 			compt+=1
-			print "nombre de tour",compt
+			#print "nombre de tour",compt
 
 	
 			
 
 
 
+
 popu = Population(100,0.9,100)
+
 
 
 
