@@ -53,7 +53,10 @@ class Graphe:
                     
                         th[i] = i**(-gamma)
                 #print (th)
-                
+                c=sum(th)
+                for i in xrange(1,self.N):
+					th[i]=th[i]/c
+                print (th)
                 kmin=0
                 kmax=self.N-1
                 i=0
@@ -454,7 +457,7 @@ class Simulation:
 		
 	def generation(self):
 		compt=0 #compteur
-		while compt < seuil:
+		while compt < self.seuil:
 			#SELECTION
 
 			popSelect=self.pop.selection()
