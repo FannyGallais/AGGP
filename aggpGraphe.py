@@ -350,40 +350,20 @@ class Population:
 					bestCostSelect.append(bestCost[i])
 					j-=1
 			
-			print len(bestCostSelect)
+				
 			return bestCostSelect
 			
 			
 			
 
         def croisement(self,dupBestPop,nbCrois):
-			"""
-            # Duplication de la population avec le meilleur cout
-
-            bestPop = self.selection()
-            dupBestPop = []
-            for i in range(len(bestPop)):
-                dupBestPop.append(bestPop[i])
-            #for j in xrange(len(bestPop)):
-            #    dupBestPop.append(bestPop[i])
-
-            #print "dupBestPop Graphe \n",dupBestPop[2].graphe
-
-
-            # On obtient ainsi une population de graphe avec une duplication des meilleurs
-            # Issue de la methode selection qui prend la moitie des meilleurs
-"""
 			for k in xrange(nbCrois):
-				"""
-				## MISE EN PLACE DE LA MUTATION  mutation 
-				for l in xrange(len(dupBestPop)):
-					self.mutation(dupBestPop[l].graphe)
-				"""
+
 				# CROSSING OVER
 
 				## Mise en place du croisement entre les differents individus 
 				# Quel graphe croise avec quel graphe ? 
-				l1 = random.randint(0,len(dupBestPop)-1)
+				l1 = random.randint(0,dupBestPop[0].N-1)
 				g1 = random.randint(0,len(dupBestPop)-1)
 				g2 = random.randint(0,len(dupBestPop)-1)
 
@@ -443,6 +423,7 @@ class Population:
 			#newPop.append(bestPop)
 			#newPop.append(dupBestPop)
 			return dupBestPop
+			
         def saveInFile(self,nameFile="info.txt"):
 			f=open(nameFile,"w")
 			f.write("taillePop: %f\n"%self.p)
@@ -471,20 +452,6 @@ class Simulation:
 			couts.append(self.pop.population[i].cout)
 		return min(couts),max(couts)
 		
-	# def arret(self):
-	# 	stop=False
-	# 	#print "difference coutMax-coutMin",self.coutMin_Max()[1]-self.coutMin_Max()[0]
-	# 	if self.coutMin_Max()[1]-self.coutMin_Max()[0]<self.seuil:
-	# 		stop=True
-	# 	return stop
-		
-	def duplicate(self,l):
-		l2=[]
-		for i in xrange(len(l)):
-			G=Graphe(l[i].N,l[i].proba)
-			G.graphe=np.copy(l[i].graphe)
-			l2.append(G)
-		return l2
 		
 	def generation(self):
 		compt=0 #compteur
@@ -492,21 +459,18 @@ class Simulation:
 			#SELECTION
 
 			popSelect=self.pop.selection()
-			
-			temp=self.duplicate(popSelect)
-			#temp=np.copy(popSelect)
 
+			#CROISEMENT
+			self.pop.croisement(popSelect,self.nbCrois)
+			
 			#MUTATION
 			for i in xrange(len(popSelect)):
 				self.pop.mutation(popSelect[i].graphe)
 			
-			#CROISEMENT
-			self.pop.croisement(popSelect,self.nbCrois)
-			
 			#MAJ DE LA POP
-			for k in xrange(self.pop.p/2):
-				self.pop.population[k]=temp[k]
-				self.pop.population[k+self.pop.p/2]=popSelect[k]
+			for k in xrange(self.pop.p):
+				self.pop.population[k]=popSelect[k]
+				
 			compt+=1
 			print "nombre de tour",compt
 
@@ -516,15 +480,12 @@ class Simulation:
 
 
 popu = Population(20,0.6,10)
-popu.selection()
 
 
 
-
-"""
 simul=Simulation(popu,10,5)
 simul.generation()
-
+"""
 g = simul.pop.population[0]
 print g
 
