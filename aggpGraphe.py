@@ -234,7 +234,7 @@ class Graphe:
                 #On recupere les differents couts des differentes methodes
                 sce1 = self.sceDegrees()
                 sce2 = self.sceCk()
-                sce3 = 1
+                sce3 = self.SCESP()
 
                 #On les multiplie entre elles
                 cout = sce1*sce2*sce3
