@@ -296,9 +296,10 @@ plt.show()
 ####################################################################################
 
 class Population:
-        def __init__(self,taillePop,proba,tailleGraphe,c=0.4):
+        def __init__(self,taillePop,probam,probai,tailleGraphe,c=0.4):
                 self.p=taillePop
-                self.proba= proba
+                self.proba= probam #la proba de mutation
+                self.probaI=probai #la proba d'initialisation
                 self.population= []
                 self.Wr=[]
                 for i in xrange(self.p):
@@ -307,10 +308,8 @@ class Population:
                 self.tailleGraphe = tailleGraphe
                 for i in range(self.p):
 					print i
-					self.population.append(Graphe(tailleGraphe,self.proba))
+					self.population.append(Graphe(tailleGraphe,probai)) #la proba d'initialisation
 					self.Wr[i]=self.Wr[i]/sum(self.Wr)
-                       
-                
 				
 				   
 
@@ -439,11 +438,15 @@ class Population:
 			#newPop.append(dupBestPop)
 			return dupBestPop
 			
-        def saveInFile(self,nameFile="info.txt"):
+        def saveInFile(self,cout,compt,nameFile="info.txt"):
 			f=open(nameFile,"w")
 			f.write("taillePop: %f\n"%self.p)
 			f.write("tailleGraphe: %f\n"%self.tailleGraphe)
-			f.write("Proba: %f\n"%self.proba)
+			f.write("Proba mutation: %f\n"%self.proba)
+			f.write("Proba initialisation:%f\n"%self.probaI )
+			f.write("cout min: %f\n"%cout[0])
+			f.write("cout max: %f\n"%cout[1])
+			f.write("compteur: %d\n"%compt)
 			f.close()
 
 
@@ -470,6 +473,7 @@ class Simulation:
 		
 	def generation(self):
 		compt=0 #compteur
+		print "seuil",self.seuil
 		while compt < self.seuil:
 			#SELECTION
 
@@ -487,7 +491,9 @@ class Simulation:
 				self.pop.population[k]=popSelect[k]
 				
 			compt+=1
+			print "compt",compt
 			#print "nombre de tour",compt
+		self.pop.saveInFile(self.coutMin_Max(),compt)
 
 	
 			
@@ -495,15 +501,16 @@ class Simulation:
 
 
 
-popu = Population(100,0.9,100)
+popu = Population(50,0.1,0.6,10)
 
 
 
 
 
-simul=Simulation(popu,10,5)
+simul=Simulation(popu,200,5)
+print "seuil",simul.seuil
 simul.generation()
-"""
+
 g = simul.pop.population[0]
 print g
 
@@ -520,7 +527,7 @@ print G.number_of_nodes()
 print G.number_of_edges()
 nx.draw(G,node_color="pink") # ROSE bien evidemment ;)
 plt.show()
-"""
+
 
 
 # for i in xrange(len(meilleurcout)):
