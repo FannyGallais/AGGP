@@ -458,6 +458,7 @@ class Simulation:
 		return l2
 		
 	def generation(self):
+		compt=0 #compteur
 		while not self.arret():
 			#SELECTION
 
@@ -477,6 +478,8 @@ class Simulation:
 			for k in xrange(self.pop.p/2):
 				self.pop.population[k]=temp[k]
 				self.pop.population[k+self.pop.p/2]=popSelect[k]
+			compt+=1
+			print "nombre de tour",compt
 
 	
 			
