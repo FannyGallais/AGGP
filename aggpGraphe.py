@@ -213,8 +213,20 @@ class Graphe:
         def SCESP(self): #je ne trouve tj pas l'ecart type  :/
             Msp=self.calcShortestPath()
             if self.isConnexe()==False:
-                return 2 #on peut majorer la SCE par 2
+                return  #on peut majorer la SCE par 2
             mu=np.log(np.log(self.N))
+            d={} #on cree le dico avec toutes les cles (lg du chemin) et le nb d'occurence de ces longueurs dans le dico
+            for i in range(self.N):
+				for j in range(i+1,self.N):
+					lgP=Msp[i,j]
+					if Msp[i,j] in d.keys():
+						d[lgP]+=1
+					else:
+						d[lgP]=1
+            cout=0
+            for lg in d.keys():
+                cout+=abs(float(lg)-mu)*float(d[lg])/float(self.N)
+            return cout
                 
 
                 
@@ -236,7 +248,7 @@ class Graphe:
 
 
                 
-"""
+
                 
 g=Graphe(10,0.6)
 print (g.graphe)
@@ -246,7 +258,8 @@ g.isConnexe()
 print ("calculCout" , g.calculCout())
 
 print "la matrice des plus courts chemins est",g.calcShortestPath()
-
+print g.SCESP()
+"""
 
 nodes = g.nodesAndEdges()[0]
 edges = g.nodesAndEdges()[1]
