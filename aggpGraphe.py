@@ -55,7 +55,7 @@ class Graphe:
                 for i in xrange(1,self.N):
 					th[i-1]=th[i-1]/c
 
-                print (th)
+                #print (th)
                 kmin=0
                 kmax=self.N-1
                 # i=0
@@ -131,7 +131,7 @@ class Graphe:
                 for i in xrange(len(Ck)-1):
                     th.append(1/float((i+1)))
                     sce+=(th[i+1]-Ck[i+1])**2
-                print "Ck theorique" , th
+                #print "Ck theorique" , th
                 return sce
                 
 
@@ -329,6 +329,7 @@ class Population:
 			dico={}
 			bestCostSelect=[]
 			for i in xrange(self.p):
+				print "cout",i
 				self.population[i].calculCout()
 
           
@@ -454,33 +455,45 @@ class Simulation:
 		self.nbCrois=nbCrois
 
 	
-	def coutMin_Max(self):
+	def coutMin_Max_Moy(self):
 		couts=[]
 		for i in xrange(len(self.pop.population)):
 			couts.append(self.pop.population[i].cout)
-		return min(couts),max(couts)
+			
+		cout_Moy=sum(couts)*1.0/len(couts)
+		return min(couts),max(couts),cout_Moy
+		
 		
 		
 	def generation(self):
 		compt=0 #compteur
+		coutMin=[]
+		coutMoy=[]
 		while compt < self.seuil:
 			#SELECTION
-
+			print "selection"
 			popSelect=self.pop.selection()
 
 			#CROISEMENT
+			print "croisement"
 			self.pop.croisement(popSelect,self.nbCrois)
 			
 			#MUTATION
+			print "mutation"
 			for i in xrange(len(popSelect)):
 				self.pop.mutation(popSelect[i].graphe)
 			
 			#MAJ DE LA POP
+			print "maj"
 			for k in xrange(self.pop.p):
 				self.pop.population[k]=popSelect[k]
 				
+			couts=self.coutMin_Max_Moy()
+			coutMin.append(couts[0])
+			coutMoy.append(couts[2])
 			compt+=1
-			#print "nombre de tour",compt
+			print "nombre de tour",compt
+		return coutMin,coutMoy
 
 	
 			
@@ -488,14 +501,19 @@ class Simulation:
 
 
 
-popu = Population(100,0.9,100)
+popu = Population(20,0.9,50)
 
 
 
 
 
-simul=Simulation(popu,10,5)
-simul.generation()
+simul=Simulation(popu,50,5)
+result=simul.generation()
+
+x=range(len(result[0]))
+plt.plot(x,result[0],color="pink")
+plt.plot(x,result[1],color="blue")
+plt.show()
 """
 g = simul.pop.population[0]
 print g
