@@ -49,9 +49,9 @@ class Graphe:
 
                 gamma = 2.5
                 th=[0]*self.N
-                for i in xrange(self.N):
-                        if deg[i]!=0:
-                                th[i] = deg[i]**(-gamma)
+                for i in xrange(1,self.N):
+                    
+                        th[i] = i**(-gamma)
                 #print (th)
                 
                 kmin=0
