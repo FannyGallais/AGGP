@@ -421,6 +421,12 @@ class Population:
 			#newPop.append(bestPop)
 			#newPop.append(dupBestPop)
 			return dupBestPop
+        def saveInFile(self,nameFile="info.txt"):
+			f=open(nameFile,"w")
+			f.write("taillePop: %f\n"%self.p)
+			f.write("tailleGraphe: %f\n"%self.tailleGraphe)
+			f.write("Proba: %f\n"%self.proba)
+			f.close()
 
 
 ####################################################################################
