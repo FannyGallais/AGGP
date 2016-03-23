@@ -17,11 +17,8 @@ class Graphe:
 								self.graphe[i,j]=1
 								self.graphe[j,i]=1
 					self.connexe=self.isConnexe()
-					test = self.isConnexe2()
 					#pour verifier que les deux methodes isConnexe donnent les memes resultats
-					if self.connexe!= test:
-						print "ERROR"
-								
+
 
         def nodesAndEdges(self):
             nodes = []
@@ -36,10 +33,12 @@ class Graphe:
 
         def degrees(self):
                 deg={}
-                for i in xrange(self.N):
+                
+                for i in xrange(self.N+1):
                         deg[i]=0 #on met toutes les valeurs du dico a 0
                 for i in xrange(self.N):
                         deg[sum(self.graphe[i])]+=1
+                
 
                 return deg
         
@@ -58,7 +57,7 @@ class Graphe:
                 for i in xrange(1,self.N):
 					th[i-1]=th[i-1]/c
 
-                print (th)
+                #print (th)
                 kmin=0
                 kmax=self.N-1
                 # i=0
@@ -75,7 +74,7 @@ class Graphe:
                         sce+=(th[i]-(deg[i]/self.N))**2
 
                 degObs = np.asarray(deg.values()) * (1/float(self.N))
-                print "deg",degObs
+                #print "deg",degObs
 
                 return (sce,th,degObs)
 
@@ -94,7 +93,7 @@ class Graphe:
                         for j in xrange(self.N):
                                 if self.graphe[i,j]==1:
                                         dicoN[i].append(j)
-                print("dicoN:",dicoN)
+                #print("dicoN:",dicoN)
 
                 #on stocke dans ni le nombres de liens entre les voisins d'un noeuds
                 for i in xrange(self.N):
@@ -107,7 +106,7 @@ class Graphe:
                                                         n+=1
                         ni[i]=n
 
-                print ("ni:",ni)
+                #print ("ni:",ni)
                 
                 for i in xrange(self.N):
                         if sum(self.graphe[i])!=0 and sum(self.graphe[i])!=1:
@@ -126,15 +125,20 @@ class Graphe:
                                         k+=1
                         if k!=0:
                                 Ck[i]= somme/k
+                #print "Dictionnaire",Ck
 
                 #print (Ck)
                 sce=0
-                th =[]
+                th = []
+                th.append(0)
+               
+
                 for i in xrange(len(Ck)-1):
-                    th.append(1/(i+1))
-                    sce+=(th[i]-Ck[i+1])**2
-                print "Ck theorique" , th
-                return sce
+                    th.append(1/float((i+1)))
+
+                    sce+=(th[i+1]-Ck[i+1])**2
+                result = (sce,th,Ck.values())
+                return result
                 
 
         def isConnexe(self):
@@ -210,7 +214,7 @@ class Graphe:
         def SCESP(self): #je ne trouve tj pas l'ecart type  :/
             Msp=self.calcShortestPath()
             if self.isConnexe()==False:
-                return  #on peut majorer la SCE par 2
+                return (self.N*(self.N-1))/2 #on peut majorer la SCE par 2
             mu=np.log(np.log(self.N))
             d={} #on cree le dico avec toutes les cles (lg du chemin) et le nb d'occurence de ces longueurs dans le dico
             for i in range(self.N):
@@ -231,9 +235,10 @@ class Graphe:
 
                 #On recupere les differents couts des differentes methodes
                 sce1 = self.sceDegrees()[0]
-                sce2 = self.sceCk()
+                sce2 = self.sceCk()[0]
                 sce3 = self.SCESP()
 
+                #print sce1,sce2,sce3
 
                 #On les ajoute entre elles
                 cout = (a*sce1)+(b*sce2)+(c*sce3)
@@ -301,6 +306,7 @@ class Population:
 				
                 self.tailleGraphe = tailleGraphe
                 for i in range(self.p):
+					print i
 					self.population.append(Graphe(tailleGraphe,self.proba))
 					self.Wr[i]=self.Wr[i]/sum(self.Wr)
                        
@@ -329,11 +335,12 @@ class Population:
 			bestCost=[]
 			dico={}
 			bestCostSelect=[]
+			for i in xrange(self.p):
+				self.population[i].calculCout()
 
           
 
 			for i in xrange(self.p):
-				self.population[i].calculCout()
 				Cost.append(self.population[i].cout)
 				if self.population[i].cout in dico:
 					dico[self.population[i].cout].append(i)
@@ -480,14 +487,17 @@ class Simulation:
 				self.pop.population[k]=popSelect[k]
 				
 			compt+=1
-			print "nombre de tour",compt
+			#print "nombre de tour",compt
 
 	
 			
 
 
 
-popu = Population(10,0.6,10)
+
+popu = Population(100,0.9,100)
+
+
 
 
 
