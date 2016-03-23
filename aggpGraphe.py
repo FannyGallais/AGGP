@@ -36,10 +36,12 @@ class Graphe:
 
         def degrees(self):
                 deg={}
-                for i in xrange(self.N):
+                
+                for i in xrange(self.N+1):
                         deg[i]=0 #on met toutes les valeurs du dico a 0
                 for i in xrange(self.N):
                         deg[sum(self.graphe[i])]+=1
+                
 
                 return deg
         
@@ -58,7 +60,7 @@ class Graphe:
                 for i in xrange(1,self.N):
 					th[i-1]=th[i-1]/c
 
-                print (th)
+                #print (th)
                 kmin=0
                 kmax=self.N-1
                 # i=0
@@ -126,16 +128,20 @@ class Graphe:
                                         k+=1
                         if k!=0:
                                 Ck[i]= somme/k
+                #print "Dictionnaire",Ck
 
                 #print (Ck)
                 sce=0
                 th = []
                 th.append(0)
+               
+
                 for i in xrange(len(Ck)-1):
                     th.append(1/float((i+1)))
+
                     sce+=(th[i+1]-Ck[i+1])**2
-                print "Ck theorique" , th
-                return sce
+                result = (sce,th,Ck.values())
+                return result
                 
 
         def isConnexe(self):
@@ -211,7 +217,7 @@ class Graphe:
         def SCESP(self): #je ne trouve tj pas l'ecart type  :/
             Msp=self.calcShortestPath()
             if self.isConnexe()==False:
-                return  #on peut majorer la SCE par 2
+                return (self.N*(self.N-1))/2 #on peut majorer la SCE par 2
             mu=np.log(np.log(self.N))
             d={} #on cree le dico avec toutes les cles (lg du chemin) et le nb d'occurence de ces longueurs dans le dico
             for i in range(self.N):
@@ -232,9 +238,10 @@ class Graphe:
 
                 #On recupere les differents couts des differentes methodes
                 sce1 = self.sceDegrees()[0]
-                sce2 = self.sceCk()
+                sce2 = self.sceCk()[0]
                 sce3 = self.SCESP()
 
+                #print sce1,sce2,sce3
 
                 #On les ajoute entre elles
                 cout = (a*sce1)+(b*sce2)+(c*sce3)
