@@ -488,8 +488,27 @@ popu = Population(20,0.6,10)
 
 
 
+
+
 simul=Simulation(popu,10,5)
 simul.generation()
+
+g = simul.pop.population[0]
+print g
+
+nodes = g.nodesAndEdges()[0]
+edges = g.nodesAndEdges()[1]
+print ("Edge",edges)
+print ("Nodes",nodes)
+
+
+G=nx.Graph()  
+G.add_nodes_from(nodes)
+G.add_edges_from(edges)
+print G.number_of_nodes()
+print G.number_of_edges()
+nx.draw(G,node_color="pink") # ROSE bien evidemment ;)
+plt.show()
 
 
 
