@@ -45,7 +45,7 @@ class Graphe:
         
         def sceDegrees(self,gamma=2.5):
                 deg = self.degrees()
-                print ("deg",deg)
+                #print ("deg",deg)
 
                 th=[0]*self.N
                 for i in xrange(1,self.N):
@@ -61,23 +61,23 @@ class Graphe:
                 print (th)
                 kmin=0
                 kmax=self.N-1
-                i=0
-                while deg[i]==0:
-                        kmin+=1
-                        i+=1
-                i=self.N-1
-                while deg[i]==0:
-                        kmax-=1
-                        i-=1
+                # i=0
+                # while deg[i]==0:
+                #         kmin+=1
+                #         i+=1
+                # i=self.N-1
+                # while deg[i]==0:
+                #         kmax-=1
+                #         i-=1
                         
                 sce=0
                 for i in xrange(kmin,kmax):
                         sce+=(th[i]-(deg[i]/self.N))**2
 
-                
-                print "deg",deg.values()*(1/self.N)
+                degObs = np.asarray(deg.values()) * (1/float(self.N))
+                print "deg",degObs
 
-                return (sce,th)
+                return (sce,th,degObs)
 
 
         
@@ -129,8 +129,11 @@ class Graphe:
 
                 #print (Ck)
                 sce=0
+                th =[]
                 for i in xrange(len(Ck)-1):
-                        sce+=(1/(i+1)-Ck[i+1])**2
+                    th[i] = 1/(i+1)
+                    sce+=(th[i]-Ck[i+1])**2
+                print "Ck theorique" , th
                 return sce
                 
 
@@ -257,8 +260,10 @@ print "la matrice des plus courts chemins est",g.calcShortestPath()
 print g.SCESP()
 
 it = range(1,11)
-plt.plot(it,g.sceDegrees()[1])
+plt.plot(it,g.sceDegrees()[1],marker='o',color='cyan')
+plt.plot(it,g.sceDegrees()[2],marker='v',color='purple')
 plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
+#plt.legend([p1,p2],["Theorique","Observee"])
 plt.show()
 """
 """
@@ -328,7 +333,10 @@ class Population:
 			for i in xrange(self.p):
 				self.population[i].calculCout()
 
+          
+
 			for i in xrange(self.p):
+                self.population[i].calculCout()
 				Cost.append(self.population[i].cout)
 				if self.population[i].cout in dico:
 					dico[self.population[i].cout].append(i)
@@ -483,6 +491,7 @@ class Simulation:
 
 
 popu = Population(1000,0.9,100)
+
 
 
 
