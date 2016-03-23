@@ -482,20 +482,23 @@ class Simulation:
 			#SELECTION
 			print "selection"
 			popSelect=self.pop.selection()
-
+			popSelect2=popSelect[1:]
 			#CROISEMENT
 			print "croisement"
-			self.pop.croisement(popSelect,self.nbCrois)
+			self.pop.croisement(popSelect2,self.nbCrois)
 			
 			#MUTATION
 			print "mutation"
-			for i in xrange(len(popSelect)):
-				self.pop.mutation(popSelect[i].graphe)
+			for i in xrange(len(popSelect2)):
+				self.pop.mutation(popSelect2[i].graphe)
 			
 			#MAJ DE LA POP
 			print "maj"
 			for k in xrange(self.pop.p):
-				self.pop.population[k]=popSelect[k]
+				if k==0:
+					self.pop.population[k]=popSelect[k]
+				else:
+					self.pop.population[k]=popSelect2[k-1]
 				
 			couts=self.coutMin_Max_Moy()
 			coutMin.append(couts[0])
@@ -516,7 +519,7 @@ popu = Population(20,0.9,50)
 
 
 
-simul=Simulation(popu,50,5)
+simul=Simulation(popu,10,5)
 result=simul.generation()
 
 x=range(len(result[0]))
