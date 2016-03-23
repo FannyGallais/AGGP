@@ -129,8 +129,11 @@ class Graphe:
 
                 #print (Ck)
                 sce=0
+                th =[]
                 for i in xrange(len(Ck)-1):
-                        sce+=(1/(i+1)-Ck[i+1])**2
+                    th[i] = 1/(i+1)
+                    sce+=(th[i]-Ck[i+1])**2
+                print "Ck theorique" , th
                 return sce
                 
 
@@ -327,7 +330,10 @@ class Population:
 			dico={}
 			bestCostSelect=[]
 
+          
+
 			for i in xrange(self.p):
+                self.population[i].calculCout()
 				Cost.append(self.population[i].cout)
 				if self.population[i].cout in dico:
 					dico[self.population[i].cout].append(i)
@@ -481,7 +487,7 @@ class Simulation:
 
 
 
-popu = Population(20,0.6,10)
+popu = Population(10,0.6,10)
 
 
 
