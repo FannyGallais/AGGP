@@ -131,7 +131,7 @@ class Graphe:
                 sce=0
                 th =[]
                 for i in xrange(len(Ck)-1):
-                    th[i] = 1/(i+1)
+                    th.append(1/(i+1))
                     sce+=(th[i]-Ck[i+1])**2
                 print "Ck theorique" , th
                 return sce
@@ -333,7 +333,7 @@ class Population:
           
 
 			for i in xrange(self.p):
-                self.population[i].calculCout()
+				self.population[i].calculCout()
 				Cost.append(self.population[i].cout)
 				if self.population[i].cout in dico:
 					dico[self.population[i].cout].append(i)
