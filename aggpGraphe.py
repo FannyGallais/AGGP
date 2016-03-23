@@ -54,8 +54,10 @@ class Graphe:
                         th[i] = i**(-gamma)
                 #print (th)
                 c=sum(th)
+
                 for i in xrange(1,self.N):
 					th[i]=th[i]/c
+
                 print (th)
                 kmin=0
                 kmax=self.N-1
@@ -73,7 +75,8 @@ class Graphe:
                         sce+=(th[i]-deg[i])**2
 
                 print "La distribution theorique",th
-                return sce
+
+                return (sce,th)
 
 
         
@@ -223,9 +226,10 @@ class Graphe:
         def calculCout(self,a=1,b=1,c=1):
 
                 #On recupere les differents couts des differentes methodes
-                sce1 = self.sceDegrees()
+                sce1 = self.sceDegrees()[0]
                 sce2 = self.sceCk()
                 sce3 = self.SCESP()
+
 
                 #On les ajoute entre elles
                 cout = (a*sce1)+(b*sce2)+(c*sce3)
@@ -250,6 +254,10 @@ print ("calculCout" , g.calculCout())
 
 print "la matrice des plus courts chemins est",g.calcShortestPath()
 print g.SCESP()
+
+it = range(1,11)
+plt.plot(it,g.sceDegrees()[1])
+plt.show()
 """
 
 nodes = g.nodesAndEdges()[0]
