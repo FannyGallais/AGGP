@@ -11,8 +11,8 @@ class Graphe:
                 self.graphe=np.zeros((self.N,self.N))
                 self.proba=p
                 while self.connexe==False:
-					for i in range(self.N):
-						for j in range(i,self.N):
+					for i in xrange(self.N):
+						for j in xrange(i,self.N):
 							if random.random()<p and i != j:
 								self.graphe[i,j]=1
 								self.graphe[j,i]=1
@@ -26,9 +26,9 @@ class Graphe:
         def nodesAndEdges(self):
             nodes = []
             edges = []
-            for i in range(self.N):
+            for i in xrange(self.N):
                     nodes.append(i)
-                    for j in range(i,self.N):
+                    for j in xrange(i,self.N):
                         if self.graphe[i,j]==1:
                             edges.append((i,j))
             return (nodes,edges)
@@ -36,9 +36,9 @@ class Graphe:
 
         def degrees(self):
                 deg={}
-                for i in range(self.N):
+                for i in xrange(self.N):
                         deg[i]=0 #on met toutes les valeurs du dico a 0
-                for i in range(self.N):
+                for i in xrange(self.N):
                         deg[sum(self.graphe[i])]+=1
 
                 return deg
@@ -49,9 +49,9 @@ class Graphe:
 
                 gamma = 2.5
                 th=[0]*self.N
-                for i in range(self.N):
-                        if deg[i]!=0:
-                                th[i] = deg[i]**(-gamma)
+                for i in xrange(1,self.N):
+                    
+                        th[i] = i**(-gamma)
                 #print (th)
                 
                 kmin=0
@@ -66,8 +66,10 @@ class Graphe:
                         i-=1
                         
                 sce=0
-                for i in range(kmin,kmax):
+                for i in xrange(kmin,kmax):
                         sce+=(th[i]-deg[i])**2
+
+                print "La distribution theorique",th
                 return sce
 
 
@@ -79,20 +81,20 @@ class Graphe:
 
                 #pour chaque noeuds on garde en memoire ses voisins, grace a un dictionnaire : dicoN
                 dicoN = {}
-                for i in range(self.N):
+                for i in xrange(self.N):
                         dicoN[i]=[]
-                for i in range(self.N):
-                        for j in range(self.N):
+                for i in xrange(self.N):
+                        for j in xrange(self.N):
                                 if self.graphe[i,j]==1:
                                         dicoN[i].append(j)
                 print("dicoN:",dicoN)
 
                 #on stocke dans ni le nombres de liens entre les voisins d'un noeuds
-                for i in range(self.N):
+                for i in xrange(self.N):
                         n=0
                         if len(dicoN[i])!=0 and len(dicoN[i])!=1: #si le noeud n'a aucun ou un seul voisin ni vaudra 0 et Ci aussi
-                                for j in range(len(dicoN[i])-1): 
-                                        for k in range(j+1,len(dicoN[i])):
+                                for j in xrange(len(dicoN[i])-1): 
+                                        for k in xrange(j+1,len(dicoN[i])):
                                                 #print(j,k,dicoN[i],"\n")
                                                 if self.graphe[dicoN[i][j],dicoN[i][k]]==1:
                                                         n+=1
@@ -100,18 +102,18 @@ class Graphe:
 
                 print ("ni:",ni)
                 
-                for i in range(self.N):
+                for i in xrange(self.N):
                         if sum(self.graphe[i])!=0 and sum(self.graphe[i])!=1:
                                 Ci[i]=2*ni[i]/(sum(self.graphe[i])*(sum(self.graphe[i])-1))
                 #print (Ci)
 
                 Ck={}
-                for i in range(self.N+1):
+                for i in xrange(self.N+1):
                         Ck[i]=0 
-                for i in range(self.N+1):
+                for i in xrange(self.N+1):
                         somme = 0
                         k=0
-                        for j in range(self.N):
+                        for j in xrange(self.N):
                                 if sum(self.graphe[j])==i:
                                         somme=somme+Ci[j]
                                         k+=1
@@ -119,24 +121,9 @@ class Graphe:
                                 Ck[i]= somme/k
 
                 #print (Ck)
-                                                            
-                deg = self.degrees()
-                
-                kmin=0
-                kmax=self.N-1
-                i=0
-                while deg[i]==0:
-                        kmin+=1
-                        i+=1
-                i=self.N-1
-                while deg[i]==0:
-                        kmax-=1
-                        i-=1
-
-                th=1/(kmax-kmin)
                 sce=0
-                for i in range(kmin,kmax+1):
-                        sce+=(th-Ck[i])**2
+                for i in xrange(len(Ck)-1):
+                        sce+=(1/(i+1)-Ck[i+1])**2
                 return sce
                 
 
@@ -158,8 +145,8 @@ class Graphe:
                 #On obtient au final la matrice (A+In) a la puissance n-1
                 #On verifie que tous les coefficients soit different de zeros
 
-                for i in range(self.N):
-                        for j in range(i,self.N):
+                for i in xrange(self.N):
+                        for j in xrange(i,self.N):
                                 if temp[i,j] == 0 :
                                     self.connexe = False
                 
@@ -197,13 +184,13 @@ class Graphe:
 
         def calcShortestPath(self):
             matSP=float("inf")*np.ones((self.N,self.N))
-            for i in range(self.N):
+            for i in xrange(self.N):
                 matSP[i,i]=0
             M=np.copy(self.graphe)
             Mt=np.copy(self.graphe)
-            for i in range(self.N): #on met la matrice a la puissance
-                for j in range(self.N): #on parcoure chaque ligne
-                    for k in range(self.N): #et chaque element de la ligne
+            for i in xrange(self.N): #on met la matrice a la puissance
+                for j in xrange(self.N): #on parcoure chaque ligne
+                    for k in xrange(self.N): #et chaque element de la ligne
                         if Mt[j,k]>0 and matSP[j,k]>i+1:
                             matSP[j,k]=i+1
                 Mt=np.dot(M,Mt)
@@ -230,14 +217,15 @@ class Graphe:
                 
 
                 
-        def calculCout(self):
+        def calculCout(self,a=1,b=1,c=1):
+
                 #On recupere les differents couts des differentes methodes
                 sce1 = self.sceDegrees()
                 sce2 = self.sceCk()
                 sce3 = self.SCESP()
 
-                #On les multiplie entre elles
-                cout = sce1*sce2*sce3
+                #On les ajoute entre elles
+                cout = (a*sce1)+(b*sce2)+(c*sce3)
 
                 #On met a jour le cout du graphe
                 self.cout = cout
@@ -441,6 +429,7 @@ class Simulation:
 		self.pop=pop
 		self.seuil=seuil
 		self.nbCrois=nbCrois
+
 	
 	def coutMin_Max(self):
 		couts=[]
@@ -448,12 +437,12 @@ class Simulation:
 			couts.append(self.pop.population[i].cout)
 		return min(couts),max(couts)
 		
-	def arret(self):
-		stop=False
-		#print "difference coutMax-coutMin",self.coutMin_Max()[1]-self.coutMin_Max()[0]
-		if self.coutMin_Max()[1]-self.coutMin_Max()[0]<self.seuil:
-			stop=True
-		return stop
+	# def arret(self):
+	# 	stop=False
+	# 	#print "difference coutMax-coutMin",self.coutMin_Max()[1]-self.coutMin_Max()[0]
+	# 	if self.coutMin_Max()[1]-self.coutMin_Max()[0]<self.seuil:
+	# 		stop=True
+	# 	return stop
 		
 	def duplicate(self,l):
 		l2=[]
@@ -465,7 +454,7 @@ class Simulation:
 		
 	def generation(self):
 		compt=0 #compteur
-		while not self.arret():
+		while compt < seuil:
 			#SELECTION
 
 			popSelect=self.pop.selection()
