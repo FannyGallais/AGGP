@@ -68,6 +68,8 @@ class Graphe:
                 sce=0
                 for i in xrange(kmin,kmax):
                         sce+=(th[i]-deg[i])**2
+
+                print "La distribution theorique",th
                 return sce
 
 
