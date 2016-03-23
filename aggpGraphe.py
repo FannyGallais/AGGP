@@ -43,20 +43,20 @@ class Graphe:
 
                 return deg
         
-        def sceDegrees(self):
+        def sceDegrees(self,gamma=2.5):
                 deg = self.degrees()
                 print ("deg",deg)
 
-                gamma = 2.5
                 th=[0]*self.N
                 for i in xrange(1,self.N):
                     
-                        th[i] = i**(-gamma)
+                        th[i-1] = i**(-gamma)
                 #print (th)
                 c=sum(th)
+                
 
                 for i in xrange(1,self.N):
-					th[i]=th[i]/c
+					th[i-1]=th[i-1]/c
 
                 print (th)
                 kmin=0
@@ -72,9 +72,10 @@ class Graphe:
                         
                 sce=0
                 for i in xrange(kmin,kmax):
-                        sce+=(th[i]-deg[i])**2
+                        sce+=(th[i]-(deg[i]/self.N))**2
 
-                print "La distribution theorique",th
+                
+                print "deg",deg.values()*(1/self.N)
 
                 return (sce,th)
 
@@ -257,6 +258,7 @@ print g.SCESP()
 
 it = range(1,11)
 plt.plot(it,g.sceDegrees()[1])
+plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
 plt.show()
 """
 
