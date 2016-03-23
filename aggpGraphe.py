@@ -245,7 +245,7 @@ class Graphe:
 
                 
 
-                
+"""                
 g=Graphe(10,0.6)
 print (g.graphe)
 print ("sceDegree:",g.sceDegrees())
@@ -262,6 +262,7 @@ plt.plot(it,g.sceDegrees()[2],marker='v',color='purple')
 plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
 #plt.legend([p1,p2],["Theorique","Observee"])
 plt.show()
+"""
 """
 
 nodes = g.nodesAndEdges()[0]
@@ -287,13 +288,23 @@ plt.show()
 ####################################################################################
 
 class Population:
-        def __init__(self,taillePop,proba,tailleGraphe):
+        def __init__(self,taillePop,proba,tailleGraphe,c=0.4):
                 self.p=taillePop
                 self.proba= proba
                 self.population= []
+                self.Wr=[]
+                for i in xrange(self.p):
+					self.Wr.append(self.p*((c-1)/(c**self.p-1))*c**(self.p-i))
+				
                 self.tailleGraphe = tailleGraphe
                 for i in range(self.p):
-                       self.population.append(Graphe(tailleGraphe,self.proba))
+					self.population.append(Graphe(tailleGraphe,self.proba))
+					self.Wr[i]=self.Wr[i]/sum(self.Wr)
+                       
+                
+				
+				   
+
 
         def mutation(self,matrice):
 
@@ -310,12 +321,11 @@ class Population:
               
 
 
-        def selection(self):
-
+        def selection(self,c=0.4):
 			Cost = []
 			bestCost=[]
-			bestCostSelect = []
 			dico={}
+			bestCostSelect=[]
 
 			for i in xrange(self.p):
 				Cost.append(self.population[i].cout)
@@ -330,41 +340,32 @@ class Population:
 				indGraphe=dico[Cost[k]][0]
 				bestCost.append(self.population[indGraphe])
 				dico[Cost[k]].remove(indGraphe)
+			
+			
 		
-
-			for j in xrange((self.p)/2):
-				bestCostSelect.append(bestCost[j])
-
+			rang=np.random.multinomial(self.p-1,self.Wr)
+			
+			bestCostSelect.append(bestCost[0])
+			for i in xrange(len(rang)):
+				j=rang[i]
+				while j!=0:
+					bestCostSelect.append(bestCost[i])
+					j-=1
+			
+				
 			return bestCostSelect
+			
+			
+			
 
         def croisement(self,dupBestPop,nbCrois):
-			"""
-            # Duplication de la population avec le meilleur cout
-
-            bestPop = self.selection()
-            dupBestPop = []
-            for i in range(len(bestPop)):
-                dupBestPop.append(bestPop[i])
-            #for j in xrange(len(bestPop)):
-            #    dupBestPop.append(bestPop[i])
-
-            #print "dupBestPop Graphe \n",dupBestPop[2].graphe
-
-
-            # On obtient ainsi une population de graphe avec une duplication des meilleurs
-            # Issue de la methode selection qui prend la moitie des meilleurs
-"""
 			for k in xrange(nbCrois):
-				"""
-				## MISE EN PLACE DE LA MUTATION  mutation 
-				for l in xrange(len(dupBestPop)):
-					self.mutation(dupBestPop[l].graphe)
-				"""
+
 				# CROSSING OVER
 
 				## Mise en place du croisement entre les differents individus 
 				# Quel graphe croise avec quel graphe ? 
-				l1 = random.randint(0,len(dupBestPop)-1)
+				l1 = random.randint(0,dupBestPop[0].N-1)
 				g1 = random.randint(0,len(dupBestPop)-1)
 				g2 = random.randint(0,len(dupBestPop)-1)
 
@@ -424,6 +425,7 @@ class Population:
 			#newPop.append(bestPop)
 			#newPop.append(dupBestPop)
 			return dupBestPop
+			
         def saveInFile(self,nameFile="info.txt"):
 			f=open(nameFile,"w")
 			f.write("taillePop: %f\n"%self.p)
@@ -452,20 +454,6 @@ class Simulation:
 			couts.append(self.pop.population[i].cout)
 		return min(couts),max(couts)
 		
-	# def arret(self):
-	# 	stop=False
-	# 	#print "difference coutMax-coutMin",self.coutMin_Max()[1]-self.coutMin_Max()[0]
-	# 	if self.coutMin_Max()[1]-self.coutMin_Max()[0]<self.seuil:
-	# 		stop=True
-	# 	return stop
-		
-	def duplicate(self,l):
-		l2=[]
-		for i in xrange(len(l)):
-			G=Graphe(l[i].N,l[i].proba)
-			G.graphe=np.copy(l[i].graphe)
-			l2.append(G)
-		return l2
 		
 	def generation(self):
 		compt=0 #compteur
@@ -473,21 +461,18 @@ class Simulation:
 			#SELECTION
 
 			popSelect=self.pop.selection()
-			
-			temp=self.duplicate(popSelect)
-			#temp=np.copy(popSelect)
 
+			#CROISEMENT
+			self.pop.croisement(popSelect,self.nbCrois)
+			
 			#MUTATION
 			for i in xrange(len(popSelect)):
 				self.pop.mutation(popSelect[i].graphe)
 			
-			#CROISEMENT
-			self.pop.croisement(popSelect,self.nbCrois)
-			
 			#MAJ DE LA POP
-			for k in xrange(self.pop.p/2):
-				self.pop.population[k]=temp[k]
-				self.pop.population[k+self.pop.p/2]=popSelect[k]
+			for k in xrange(self.pop.p):
+				self.pop.population[k]=popSelect[k]
+				
 			compt+=1
 			print "nombre de tour",compt
 
@@ -500,12 +485,9 @@ popu = Population(20,0.6,10)
 
 
 
-
-
-
 simul=Simulation(popu,10,5)
 simul.generation()
-
+"""
 g = simul.pop.population[0]
 print g
 
@@ -522,7 +504,7 @@ print G.number_of_nodes()
 print G.number_of_edges()
 nx.draw(G,node_color="pink") # ROSE bien evidemment ;)
 plt.show()
-
+"""
 
 
 # for i in xrange(len(meilleurcout)):
