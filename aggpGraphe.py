@@ -217,14 +217,15 @@ class Graphe:
                 
 
                 
-        def calculCout(self):
+        def calculCout(self,a=1,b=1,c=1):
+
                 #On recupere les differents couts des differentes methodes
                 sce1 = self.sceDegrees()
                 sce2 = self.sceCk()
                 sce3 = self.SCESP()
 
-                #On les multiplie entre elles
-                cout = sce1*sce2*sce3
+                #On les ajoute entre elles
+                cout = (a*sce1)+(b*sce2)+(c*sce3)
 
                 #On met a jour le cout du graphe
                 self.cout = cout
