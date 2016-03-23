@@ -237,7 +237,7 @@ class Graphe:
 
                 
 
-                
+"""                
 g=Graphe(10,0.6)
 print (g.graphe)
 print ("sceDegree:",g.sceDegrees())
@@ -247,6 +247,7 @@ print ("calculCout" , g.calculCout())
 
 print "la matrice des plus courts chemins est",g.calcShortestPath()
 print g.SCESP()
+"""
 """
 
 nodes = g.nodesAndEdges()[0]
@@ -272,13 +273,23 @@ plt.show()
 ####################################################################################
 
 class Population:
-        def __init__(self,taillePop,proba,tailleGraphe):
+        def __init__(self,taillePop,proba,tailleGraphe,c=0.4):
                 self.p=taillePop
                 self.proba= proba
                 self.population= []
+                self.Wr=[]
+                for i in xrange(self.p):
+					self.Wr.append(self.p*((c-1)/(c**self.p-1))*c**(self.p-i))
+				
                 self.tailleGraphe = tailleGraphe
                 for i in range(self.p):
-                       self.population.append(Graphe(tailleGraphe,self.proba))
+					self.population.append(Graphe(tailleGraphe,self.proba))
+					self.Wr[i]=self.Wr[i]/sum(self.Wr)
+                       
+                
+				
+				   
+
 
         def mutation(self,matrice):
 
@@ -295,12 +306,11 @@ class Population:
               
 
 
-        def selection(self):
-
+        def selection(self,c=0.4):
 			Cost = []
 			bestCost=[]
-			bestCostSelect = []
 			dico={}
+			bestCostSelect=[]
 
 			for i in xrange(self.p):
 				Cost.append(self.population[i].cout)
@@ -315,12 +325,23 @@ class Population:
 				indGraphe=dico[Cost[k]][0]
 				bestCost.append(self.population[indGraphe])
 				dico[Cost[k]].remove(indGraphe)
+			
+			
 		
-
-			for j in xrange((self.p)/2):
-				bestCostSelect.append(bestCost[j])
-
+			rang=np.random.multinomial(self.p-1,self.Wr)
+			
+			bestCostSelect.append(bestCost[0])
+			for i in xrange(len(rang)):
+				j=rang[i]
+				while j!=0:
+					bestCostSelect.append(bestCost[i])
+					j-=1
+			
+			print len(bestCostSelect)
 			return bestCostSelect
+			
+			
+			
 
         def croisement(self,dupBestPop,nbCrois):
 			"""
@@ -482,12 +503,12 @@ class Simulation:
 
 
 popu = Population(20,0.6,10)
+popu.selection()
 
 
 
 
-
-
+"""
 simul=Simulation(popu,10,5)
 simul.generation()
 
@@ -507,7 +528,7 @@ print G.number_of_nodes()
 print G.number_of_edges()
 nx.draw(G,node_color="pink") # ROSE bien evidemment ;)
 plt.show()
-
+"""
 
 
 # for i in xrange(len(meilleurcout)):
