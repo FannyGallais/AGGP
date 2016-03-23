@@ -43,17 +43,22 @@ class Graphe:
 
                 return deg
         
-        def sceDegrees(self):
+        def sceDegrees(self,gamma=2.5):
                 deg = self.degrees()
                 print ("deg",deg)
 
-                gamma = 2.5
                 th=[0]*self.N
                 for i in xrange(1,self.N):
                     
-                        th[i] = i**(-gamma)
+                        th[i-1] = i**(-gamma)
                 #print (th)
+                c=sum(th)
                 
+
+                for i in xrange(1,self.N):
+					th[i-1]=th[i-1]/c
+
+                print (th)
                 kmin=0
                 kmax=self.N-1
                 i=0
@@ -67,10 +72,12 @@ class Graphe:
                         
                 sce=0
                 for i in xrange(kmin,kmax):
-                        sce+=(th[i]-deg[i])**2
+                        sce+=(th[i]-(deg[i]/self.N))**2
 
-                print "La distribution theorique",th
-                return sce
+                
+                print "deg",deg.values()*(1/self.N)
+
+                return (sce,th)
 
 
         
@@ -220,9 +227,10 @@ class Graphe:
         def calculCout(self,a=1,b=1,c=1):
 
                 #On recupere les differents couts des differentes methodes
-                sce1 = self.sceDegrees()
+                sce1 = self.sceDegrees()[0]
                 sce2 = self.sceCk()
                 sce3 = self.SCESP()
+
 
                 #On les ajoute entre elles
                 cout = (a*sce1)+(b*sce2)+(c*sce3)
@@ -247,6 +255,11 @@ print ("calculCout" , g.calculCout())
 
 print "la matrice des plus courts chemins est",g.calcShortestPath()
 print g.SCESP()
+
+it = range(1,11)
+plt.plot(it,g.sceDegrees()[1])
+plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
+plt.show()
 """
 """
 
@@ -475,7 +488,7 @@ class Simulation:
 		
 	def generation(self):
 		compt=0 #compteur
-		while compt < seuil:
+		while compt < self.seuil:
 			#SELECTION
 
 			popSelect=self.pop.selection()
