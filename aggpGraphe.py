@@ -18,6 +18,7 @@ class Graphe:
 								self.graphe[j,i]=1
 					self.connexe=self.isConnexe()
 					#pour verifier que les deux methodes isConnexe donnent les memes resultats
+		
 
 
         def nodesAndEdges(self):
@@ -41,6 +42,9 @@ class Graphe:
                 
 
                 return deg
+
+
+
         
         def sceDegrees(self,gamma=2.5):
                 deg = self.degrees()
@@ -229,26 +233,30 @@ class Graphe:
             cout=0
             for lg in d.keys():
                 cout+=abs(float(lg)-mu)*float(d[lg])/float(self.N)
-            return cout
+            return (cout,d)
+            
                 
 
                 
         def calculCout(self,a=1,b=1,c=1):
 
                 #On recupere les differents couts des differentes methodes
-                sce1 = self.sceDegrees()[0]
-                sce2 = self.sceCk()[0]
-                sce3 = self.SCESP()
+				sce1 = self.sceDegrees()[0]
+				sce2 = self.sceCk()[0]
+				sce3 = self.SCESP()[0]
+				#print "sceDeg",sce1,"sceCk",sce2,"sceSP",sce3
+				#print sce1,sce2,sce3
 
-                #print sce1,sce2,sce3
+				#On les ajoute entre elles
+				cout = (a*sce1)+(b*sce2)+(c*sce3)
 
-                #On les ajoute entre elles
-                cout = (a*sce1)+(b*sce2)+(c*sce3)
+				#On met a jour le cout du graphe
+				self.cout = cout
 
-                #On met a jour le cout du graphe
-                self.cout = cout
+				return cout
+				
 
-                return cout
+			
                 
 
 
@@ -429,16 +437,6 @@ class Population:
 				dupBestPop[g2].graphe = graphe2
 
 
-				# print "Les deux graphes a croises sont \n"
-				# print "g1" , graphe1
-				# print ""
-				# print "g2" ,graphe2
-
-			#La nouvelle population contient les anciens meilleurs, puis les nouveaux 
-			# Qui sont remanier 
-			#newPop = []
-			#newPop.append(bestPop)
-			#newPop.append(dupBestPop)
 			return dupBestPop
 			
         def saveInFile(self,cout,compt,nameFile="info.txt"):
@@ -517,11 +515,38 @@ class Simulation:
 	
 			
 
+def drawSCE(g):
+	#sce DEGRES
+	plt.figure("Degres")
+	sceDeg=g.sceDegrees()
+	plt.plot(range(len(sceDeg[1])),sceDeg[1],marker='o',color='cyan')
+	plt.plot(range(len(sceDeg[2])),sceDeg[2],marker='v',color='purple')
+	plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
+
+	#sce Ck
+	plt.figure("Ck")
+	sceCk=g.sceCk()
+	plt.plot(range(len(sceCk[1])),sceCk[1],marker='o',color='cyan')
+	plt.plot(range(len(sceCk[2])),sceCk[2],marker='v',color='purple')
+	plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
+
+	#sce DEGRES
+	plt.figure("Shortest Path")
+	sceSP=g.SCESP()[1]
+	l1=sorted(sceSP.keys())
+	l2=sceSP.values()
+	mu=np.log(np.log(g.N))
+	plt.plot(range(100),[mu]*100,marker='o',color='cyan')
+	plt.plot(l1,l2,"v",color='purple')
+	plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
+	plt.show()
 
 
 
+g=Graphe(50,0.7)
+drawSCE(g)
 
-popu = Population(50,0.1,0.6,75)
+popu = Population(100,0.1,0.6,100)
 
 
 
@@ -533,19 +558,17 @@ result=simul.generation()
 
 
 x=range(len(result[0]))
-plt.plot(x,result[0],color="pink")
+plt.figure("figure 1")
+plt.plot(x,result[0],color="red")
 plt.plot(x,result[1],color="blue")
-plt.show()
-"""
+#plt.show()
+
 g = simul.pop.population[0]
-print g
 
 nodes = g.nodesAndEdges()[0]
 edges = g.nodesAndEdges()[1]
-print ("Edge",edges)
-print ("Nodes",nodes)
 
-
+plt.figure("figure 2")
 G=nx.Graph()  
 G.add_nodes_from(nodes)
 G.add_edges_from(edges)
@@ -553,7 +576,7 @@ print G.number_of_nodes()
 print G.number_of_edges()
 nx.draw(G,node_color="pink") # ROSE bien evidemment ;)
 plt.show()
-
+"""
 
 
 # for i in xrange(len(meilleurcout)):
