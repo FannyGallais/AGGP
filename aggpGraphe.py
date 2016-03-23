@@ -10,18 +10,18 @@ class Graphe:
                 self.connexe= False
                 self.graphe=np.zeros((self.N,self.N))
                 self.proba=p
+                i=0
                 while self.connexe==False:
+					print "i",i
 					for i in xrange(self.N):
 						for j in xrange(i,self.N):
 							if random.random()<p and i != j:
 								self.graphe[i,j]=1
 								self.graphe[j,i]=1
 					self.connexe=self.isConnexe()
-					test = self.isConnexe2()
+					i+=1
 					#pour verifier que les deux methodes isConnexe donnent les memes resultats
-					if self.connexe!= test:
-						print "ERROR"
-								
+
 
         def nodesAndEdges(self):
             nodes = []
@@ -296,6 +296,7 @@ class Population:
 				
                 self.tailleGraphe = tailleGraphe
                 for i in range(self.p):
+					print i
 					self.population.append(Graphe(tailleGraphe,self.proba))
 					self.Wr[i]=self.Wr[i]/sum(self.Wr)
                        
@@ -324,6 +325,8 @@ class Population:
 			bestCost=[]
 			dico={}
 			bestCostSelect=[]
+			for i in xrange(self.p):
+				self.population[i].calculCout()
 
 			for i in xrange(self.p):
 				Cost.append(self.population[i].cout)
@@ -479,7 +482,7 @@ class Simulation:
 
 
 
-popu = Population(20,0.6,10)
+popu = Population(1000,0.9,100)
 
 
 
