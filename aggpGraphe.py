@@ -337,10 +337,9 @@ class Population:
 			dico={}
 			bestCostSelect=[]
 			for i in xrange(self.p):
-				print "cout",i
+				#print "cout",i
 				self.population[i].calculCout()
 
-          
 
 			for i in xrange(self.p):
 				Cost.append(self.population[i].cout)
@@ -350,6 +349,7 @@ class Population:
 					dico[self.population[i].cout]=[i]
 					
 			Cost=sorted(Cost)
+			#print "minCout",Cost[0]
 			
 			for k in xrange(len(Cost)):
 				indGraphe=dico[Cost[k]][0]
@@ -485,20 +485,20 @@ class Simulation:
 		coutMoy=[]
 		while compt < self.seuil:
 			#SELECTION
-			print "selection"
+			#print "selection"
 			popSelect=self.pop.selection()
 			popSelect2=popSelect[1:]
 			#CROISEMENT
-			print "croisement"
+			#print "croisement"
 			self.pop.croisement(popSelect2,self.nbCrois)
 			
 			#MUTATION
-			print "mutation"
+			#print "mutation"
 			for i in xrange(len(popSelect2)):
 				self.pop.mutation(popSelect2[i].graphe)
 			
 			#MAJ DE LA POP
-			print "maj"
+			#print "maj"
 			for k in xrange(self.pop.p):
 				if k==0:
 					self.pop.population[k]=popSelect[k]
@@ -510,7 +510,7 @@ class Simulation:
 			coutMoy.append(couts[2])
 			compt+=1
 
-		self.pop.saveInFile(self.coutMin_Max(),compt)
+		self.pop.saveInFile(self.coutMin_Max_Moy(),compt)
 		print "nombre de tour",compt
 		return coutMin,coutMoy
 
@@ -521,14 +521,14 @@ class Simulation:
 
 
 
-popu = Population(50,0.1,0.6,10)
+popu = Population(50,0.1,0.6,75)
 
 
 
 
-simul=Simulation(popu,200,5)
+simul=Simulation(popu,50,5)
 print "seuil",simul.seuil
-simul.generation()
+result=simul.generation()
 
 
 
@@ -537,7 +537,6 @@ plt.plot(x,result[0],color="pink")
 plt.plot(x,result[1],color="blue")
 plt.show()
 """
->>>>>>> c8c3e978c6024d58fbee986664c1bdc034b8f23a
 g = simul.pop.population[0]
 print g
 
@@ -561,7 +560,7 @@ plt.show()
 #     print meilleurcout[i].cout
 
 
-'''
+
 #pour tester le produit matriciel
 G1=Graphe(5,0.6)
 g1= G1.graphe
@@ -595,4 +594,4 @@ Traceback (most recent call last):
   File "aggpGraphe.py", line 336, in croisement
     self.mutation(dupBestPop[l].graphe)
 AttributeError: 'int' object has no attribute 'graphe'
-'''
+"""
