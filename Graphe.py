@@ -1,22 +1,28 @@
 import numpy as np
 import random
-import networkx as nx
+#import networkx as nx
 import matplotlib.pyplot as plt
-
 class Graphe:
-        def __init__(self,tailleGraphe,p):
+        def __init__(self,tailleGraphe,p,name,g=0):
                 self.N=tailleGraphe
                 self.cout= random.randint(0,self.N) # En attendant d'avoir le vrai cout
                 self.connexe= False
-                self.graphe=np.zeros((self.N,self.N))
-                while self.connexe==False:
-					for i in range(self.N):
-						for j in range(i,self.N):
-							if random.random()<p and i != j:
-								self.graphe[i,j]=1
-								self.graphe[j,i]=1
-					self.connexe=self.isConnexe()
-								
+                self.nom=name
+                self.p=p
+                if g==0:
+                        self.graphe=np.zeros((self.N,self.N))
+                        while self.connexe==False:
+                                for i in range(self.N):
+                                        for j in range(i,self.N):
+                                                if random.random()<p and i != j:
+                                                        self.graphe[i,j]=1
+                                                        self.graphe[j,i]=1
+                                        self.connexe=self.isConnexe()
+                                        #pour verifier que les deux methodes isConnexe donnent les memes resultats
+                        
+                else:
+                        self.graphe=np.copy(g.graphe)
+        
 
         def nodesAndEdges(self):
             nodes = []
@@ -31,39 +37,53 @@ class Graphe:
 
         def degrees(self):
                 deg={}
-                for i in range(self.N):
+                
+                for i in range(self.N+1):
                         deg[i]=0 #on met toutes les valeurs du dico a 0
                 for i in range(self.N):
                         deg[sum(self.graphe[i])]+=1
+                
 
                 return deg
-        
-        def sceDegrees(self):
-                deg = self.degrees()
-                print ("deg",deg)
 
-                gamma = 2.5
+
+
+        
+        def sceDegrees(self,gamma=2.5):
+                deg = self.degrees()
+                #print ("deg",deg)
+
                 th=[0]*self.N
-                for i in range(self.N):
-                        if deg[i]!=0:
-                                th[i] = deg[i]**(-gamma)
+                for i in range(1,self.N):
+                    
+                        th[i-1] = i**(-gamma)
                 #print (th)
+                c=sum(th)
                 
+
+                for i in range(1,self.N):
+                                        th[i-1]=th[i-1]/c
+
+                #print (th)
                 kmin=0
                 kmax=self.N-1
-                i=0
-                while deg[i]==0:
-                        kmin+=1
-                        i+=1
-                i=self.N-1
-                while deg[i]==0:
-                        kmax-=1
-                        i-=1
+                # i=0
+                # while deg[i]==0:
+                #         kmin+=1
+                #         i+=1
+                # i=self.N-1
+                # while deg[i]==0:
+                #         kmax-=1
+                #         i-=1
                         
                 sce=0
                 for i in range(kmin,kmax):
-                        sce+=(th[i]-deg[i])**2
-                return sce
+                        sce+=(th[i]-(deg[i]/self.N))**2
+                
+                degObs = np.asarray(list(deg.values()))*(1/float(self.N))
+                #print "deg",degObs
+
+                return (sce,th,degObs)
 
 
         
@@ -80,7 +100,7 @@ class Graphe:
                         for j in range(self.N):
                                 if self.graphe[i,j]==1:
                                         dicoN[i].append(j)
-                print("dicoN:",dicoN)
+                #print("dicoN:",dicoN)
 
                 #on stocke dans ni le nombres de liens entre les voisins d'un noeuds
                 for i in range(self.N):
@@ -93,7 +113,7 @@ class Graphe:
                                                         n+=1
                         ni[i]=n
 
-                print ("ni:",ni)
+                #print ("ni:",ni)
                 
                 for i in range(self.N):
                         if sum(self.graphe[i])!=0 and sum(self.graphe[i])!=1:
@@ -112,27 +132,22 @@ class Graphe:
                                         k+=1
                         if k!=0:
                                 Ck[i]= somme/k
+                #print "Dictionnaire",Ck
 
                 #print (Ck)
-                                                            
-                deg = self.degrees()
-                
-                kmin=0
-                kmax=self.N-1
-                i=0
-                while deg[i]==0:
-                        kmin+=1
-                        i+=1
-                i=self.N-1
-                while deg[i]==0:
-                        kmax-=1
-                        i-=1
-
-                th=1/(kmax-kmin)
                 sce=0
-                for i in range(kmin,kmax+1):
-                        sce+=(th-Ck[i])**2
-                return sce
+                th = []
+                th.append(0)
+               
+
+                for i in range(len(Ck)-1):
+                    th.append(1/float((i+1)))
+
+                    sce+=(th[i+1]-Ck[i+1])**2
+
+                result = (sce,th,Ck.values())
+                return result
+
                 
 
         def isConnexe(self):
@@ -163,7 +178,32 @@ class Graphe:
                 #print temp
                 return True
                 
-                # Amelioration possible produit matrice et mettre un 1
+                
+        def isConnexe2(self):
+                        matrice =np.eye(self.N)
+                        mat = self.graphe + matrice
+                        temp = self.graphe + matrice
+                        temp2 = self.graphe + matrice
+                        
+                        k=0
+                        while k < self.N -1 :
+                                for p in range(self.N):
+                                        for i in range(self.N):
+                                                somme=0
+                                                for j in range(self.N):
+                                                        somme=somme+temp[i,j]*mat[j,p]
+                                                #on met 1 si on a une position differente de zeros 
+                                                if somme !=0:
+                                                        temp[i,p] = 1
+                                                #a la derniere boucle on regarde si on a des zeros si oui on retourne false
+                                                if somme == 0 and k==self.N-2:
+                                                        self.connexe = False
+                                                        return False
+                                #actualisation de temp pour le prochain produit matriciel
+                                temp=np.copy(temp2)
+                                k+=1
+                        self.connexe = True
+                        return True
 
         def calcShortestPath(self):
             matSP=float("inf")*np.ones((self.N,self.N))
@@ -183,32 +223,63 @@ class Graphe:
         def SCESP(self): #je ne trouve tj pas l'ecart type  :/
             Msp=self.calcShortestPath()
             if self.isConnexe()==False:
-                return 2 #on peut majorer la SCE par 2
+                return (self.N*(self.N-1))/2 #on peut majorer la SCE par 2 PROBLEME QUE FAIT ON QUAND C PAS CONNEXE
             mu=np.log(np.log(self.N))
+            d={} #on cree le dico avec toutes les cles (lg du chemin) et le nb d'occurence de ces longueurs dans le dico
+            for i in range(self.N):
+                for j in range(i+1,self.N):
+                        lgP=Msp[i,j]
+                        if Msp[i,j] in d.keys():
+                                d[lgP]+=1
+                        else:
+                                d[lgP]=1
+            cost=0
+            for lg in d.keys():
+                cost+=abs(float(lg)-mu)*float(d[lg])/float(self.N)
+            results=(cost,d)
+            return cost
+            
                 
 
                 
-        def calculCout(self):
+        def calculCout(self,a=1,b=1,c=1):
+
                 #On recupere les differents couts des differentes methodes
-                sce1 = self.sceDegrees()
-                sce2 = self.sceCk()
-                sce3 = 1
+                sce1 = self.sceDegrees()[0]
+                sce2 = self.sceCk()[0]
+                #print ("erreur SCESP()[0]:",self.SCESP())
+                sce3 = self.SCESP()
+                #print "sceDeg",sce1,"sceCk",sce2,"sceSP",sce3
+                #print sce1,sce2,sce3
 
-                #On les multiplie entre elles
-                cout = sce1*sce2*sce3
+                #On les ajoute entre elles
+                cout = (a*sce1)+(b*sce2)+(c*sce3)
 
                 #On met a jour le cout du graphe
                 self.cout = cout
 
                 return cout
+            
+        def __str__(self):
+            return self.nom                                
+
+        def __repr__(self):
+            return self.nom
                 
 
 
+"""
+g=Graphe(10,0.6,1)
+print (g.graphe)
+g1=Graphe(10,0.6,1,g)
+print (g1.graphe)
+g1.graphe[0,0]=12
+print (g1.graphe)
+print(g.graphe)
+
 
                 
 
-                
-g=Graphe(10,0.6)
 print (g.graphe)
 print ("sceDegree:",g.sceDegrees())
 print ("sceCk:",g.sceCk())
@@ -216,7 +287,16 @@ g.isConnexe()
 print ("calculCout" , g.calculCout())
 
 print "la matrice des plus courts chemins est",g.calcShortestPath()
+print g.SCESP()
 
+it = range(1,11)
+plt.plot(it,g.sceDegrees()[1],marker='o',color='cyan')
+plt.plot(it,g.sceDegrees()[2],marker='v',color='purple')
+plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
+#plt.legend([p1,p2],["Theorique","Observee"])
+plt.show()
+"""
+"""
 
 nodes = g.nodesAndEdges()[0]
 edges = g.nodesAndEdges()[1]
@@ -232,151 +312,4 @@ print G.number_of_edges()
 nx.draw(G,node_color="pink") # ROSE bien evidemment ;)
 plt.show()
 
-
-
-####################################################################################
-##                                                                                ## 
-##                            CLASS POPULATION                                    ##
-##                                                                                ## 
-####################################################################################
-
-class Population:
-        def __init__(self,taillePop,proba,tailleGraphe):
-                self.p=taillePop
-                self.proba= proba
-                self.population= []
-                self.tailleGraphe = tailleGraphe
-                for i in range(self.p):
-                       self.population.append(Graphe(tailleGraphe,self.proba))
-
-        def mutation(self):
-                print self.population[0].graphe
-                print ""
-                for i in range(self.p):
-                        
-                        for j in range(self.tailleGraphe):
-                                for k in range(j,self.tailleGraphe):
-                                        pMutation = random.random()
-                                        if pMutation > self.proba :
-                                                if self.population[i].graphe[j,k] == 0:
-                                                        self.population[i].graphe[j,k] = 1
-                                                        self.population[i].graphe[k,j] = 1
-                                                else :
-                                                        self.population[i].graphe[j,k] = 0
-                                                        self.population[i].graphe[k,j] = 0
-                print self.population[0].graphe
-
-
-        def selection(self):
-
-            bestCost = []
-            bestCostSelect = []
-            indice = []
-            ind = 0
-            temp = self.population[0].cout
-
-            for i in range(self.p):
-                for j in range(self.p):
-                    if i != j : 
-                        if self.population[j].cout >= temp :
-                            #On verifie que ce cout n est pas deja ete selectionne
-                            if j not in indice:
-                                temp = self.population[j]
-                                ind = j 
-                #On remplis notre liste des meilleurs couts.
-                bestCost.append(temp)
-                indice.append(ind)
-
-            for k in range((self.p)/2):
-                bestCostSelect.append(bestCost[k])
-
-            #print bestCostSelect
-
-            return bestCostSelect
-
-        def croisement(self):
-
-            # Duplication de la population avec le meilleur cout
-
-            bestPop = self.selection()
-            dupBestPop = []
-            for i in range(len(bestPop)):
-                dupBestPop.append(bestPop[i])
-            for j in range(len(bestPop)):
-                dupBestPop.append(bestPop[i])
-
-            print "dupBestPop Graphe \n",dupBestPop[2].graphe
-
-
-            # On obtient ainsi une population de graphe avec une duplication des meilleurs
-            # Issue de la methode selection qui prend la moitie des meilleurs
-
-            ## Mise en place du croisement entre les differents individus 
-            # Quel graphe croise avec quel graphe ? 
-            l1 = random.randint(0,len(dupBestPop)-1)
-            g1 = random.randint(0,len(dupBestPop)-1)
-            g2 = random.randint(0,len(dupBestPop)-1)
-
-            while g1 == g2 : 
-                g2 = random.randint(0,len(dupBestPop)-1)
-            print "l1",l1
-            print "Valeurs de g1/g2 \n",g1,g2
-            #Puis on choisit aleatoirement les positions qui vont etre croises :
-            pos1 = random.randint(0,dupBestPop[0].N-1)
-            pos2 = random.randint(0,dupBestPop[0].N-1)
-            while pos1 == pos2 : 
-                pos2 = random.randint(0,dupBestPop[0].N-1)
-
-            print "Valeurs de pos1/pos2 \n",pos1,pos2
-
-            p1 = min(pos1,pos2)
-            p2 = max(pos1,pos2)
-
-            # Mise en place du croisement:
-            graphe1 = dupBestPop[g1].graphe
-            graphe2 = dupBestPop[g2].graphe
-            temp1 = dupBestPop[g1].graphe
-            temp2 = dupBestPop[g2].graphe
-
-            print "Les deux graphes a croises sont \n"
-            print "g1" , graphe1
-            print ""
-            print "g2" ,graphe2
-
-
-            
-            for i in range(p1,p2+1):
-                
-                #On modifie le premier graphe
-               
-                graphe1[l1,i] = temp2[l1,i]
-                graphe1[i,l1] = temp2[i,l1]
-
-                #Puis le deuxieme graphe
-
-                graphe2[l1,i] = temp1[l1,i]
-                graphe2[i,l1] = temp1[i,l1]
-
-            print "Les deux graphes a croises sont \n"
-            print "g1" , graphe1
-            print ""
-            print "g2" ,graphe2
-
-        
-
-
-
-
-
-popu = Population(10,0.6,10)
-print ("Graphe pour le premier individu de la population \n",popu.population[0].graphe)
-popu.mutation()
-meilleurcout = popu.selection()
-popu.croisement()
-# for i in range(len(meilleurcout)):
-#     print meilleurcout[i].cout
-
-
-
-
-
+"""
