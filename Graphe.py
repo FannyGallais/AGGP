@@ -12,12 +12,12 @@ class Graphe:
                 if g==0:
                         self.graphe=np.zeros((self.N,self.N))
                         while self.connexe==False:
-                                for i in range(self.N):
-                                        for j in range(i,self.N):
-                                                if random.random()<p and i != j:
-                                                        self.graphe[i,j]=1
-                                                        self.graphe[j,i]=1
-                                        self.connexe=self.isConnexe()
+							for i in range(self.N):
+									for j in range(i,self.N):
+											if random.random()<p and i != j:
+													self.graphe[i,j]=1
+													self.graphe[j,i]=1
+							self.connexe=self.isConnexe()
                                         #pour verifier que les deux methodes isConnexe donnent les memes resultats
                         
                 else:
@@ -172,10 +172,8 @@ class Graphe:
                         for j in range(i,self.N):
                                 if temp[i,j] == 0 :
                                     self.connexe = False
-                
                                     return False
                 self.connexe = True
-                #print temp
                 return True
                 
                 

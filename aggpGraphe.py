@@ -67,10 +67,11 @@ class Simulation:
                         coutMin.append(couts[0])
                         coutMoy.append(couts[2])
                         compt+=1
+                        print ("nombre de tour",compt)
                         
 
                 self.pop.saveInFile(self.coutMin_Max_Moy(),compt)
-                print ("nombre de tour",compt)
+                
                 return coutMin,coutMoy
 
         
@@ -107,12 +108,12 @@ def drawSCE(g):
 #g=Graphe(50,0.7)
 #drawSCE(g)
 
-popu = Population.Population(100,0.1,0.6,100)
+popu = Population.Population(100,0.1,0.8,100)
 
 
 
 
-simul=Simulation(popu,30,20)
+simul=Simulation(popu,20,20)
 result=simul.generation()
 
 x=range(len(result[0]))
@@ -122,6 +123,7 @@ plt.plot(x,result[1],color="blue")
 plt.show()
 
 g = simul.pop.population[0]
+drawSCE(g)
 
 nodes = g.nodesAndEdges()[0]
 edges = g.nodesAndEdges()[1]
