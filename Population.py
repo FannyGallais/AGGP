@@ -53,6 +53,7 @@ class Population:
                         
                         for i in range(self.p):
                                 self.population[i].calculCout()
+                                #print "cout",i
                         
 
                         for i in range(self.p):

@@ -1,6 +1,6 @@
 import numpy as np
 import random
-#import networkx as nx
+import networkx as nx
 import matplotlib.pyplot as plt
 
 import Population
@@ -22,7 +22,8 @@ class Simulation:
         def coutMin_Max_Moy(self):
                 couts=[]
                 for i in range(len(self.pop.population)):
-                        couts.append(self.pop.population[i].calculCout())
+                        #couts.append(self.pop.population[i].calculCout())
+                        couts.append(self.pop.population[i].cout)
                         
                 cout_Moy=sum(couts)*1.0/len(couts)
                 return min(couts),max(couts),cout_Moy
@@ -36,10 +37,13 @@ class Simulation:
                 coutMin=[]
                 coutMoy=[]
                 while compt < self.seuil:
-                        print (compt)
                         #SELECTION
+                        print compt
                         #print "selection"
                         popSelect=self.pop.selection()
+                        couts=self.coutMin_Max_Moy()
+                        coutMin.append(couts[0])
+                        coutMoy.append(couts[2])
                         #partie de la pop qui va muter
                         popSelect2=popSelect[1]
                         
@@ -55,17 +59,8 @@ class Simulation:
                         #MAJ DE LA POP
                         #print "maj"
                         
-                        for k in range(self.pop.p):
-                                if k==0:
-                                        self.pop.population[k]=popSelect[0]
-                                else:
-                                        self.pop.population[k]=popSelect2[k-1]
-                        
                         self.pop.population[0]=popSelect[0]
                         self.pop.population[1:]=popSelect2[:]
-                        couts=self.coutMin_Max_Moy()
-                        coutMin.append(couts[0])
-                        coutMoy.append(couts[2])
                         compt+=1
                         print ("nombre de tour",compt)
                         
@@ -78,42 +73,44 @@ class Simulation:
                         
 
 def drawSCE(g):
-        #sce DEGRES
-        plt.figure("Degres")
-        sceDeg=g.sceDegrees()
-        plt.plot(range(len(sceDeg[1])),sceDeg[1],marker='o',color='cyan')
-        plt.plot(range(len(sceDeg[2])),sceDeg[2],marker='v',color='purple')
-        plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
+	#sce DEGRES
+	plt.figure("Degres")
+	sceDeg=g.sceDegrees()
+	plt.plot(range(len(sceDeg[1])),sceDeg[1],marker='o',color='cyan')
+	plt.plot(range(len(sceDeg[2])),sceDeg[2],marker='v',color='purple')
+	plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
 
-        #sce Ck
-        plt.figure("Ck")
-        sceCk=g.sceCk()
-        plt.plot(range(len(sceCk[1])),sceCk[1],marker='o',color='cyan')
-        plt.plot(range(len(sceCk[2])),sceCk[2],marker='v',color='purple')
-        plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
+	#sce Ck
+	plt.figure("Ck")
+	sceCk=g.sceCk()
+	plt.plot(range(len(sceCk[1])),sceCk[1],marker='o',color='cyan')
+	plt.plot(range(len(sceCk[2])),sceCk[2],marker='v',color='purple')
+	plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
 
-        #sce DEGRES
-        plt.figure("Shortest Path")
-        sceSP=g.SCESP()[1]
-        l1=sorted(sceSP.keys())
-        l2=sceSP.values()
-        mu=np.log(np.log(g.N))
-        plt.plot(range(100),[mu]*100,marker='o',color='cyan')
-        plt.plot(l1,l2,"v",color='purple')
-        plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
-        plt.show()
+	"""
+	#sce SP
+	plt.figure("Shortest Path")
+	sceSP=g.SCESP()[1]
+	l1=sorted(sceSP.keys())
+	l2=sceSP.values()
+	mu=np.log(np.log(g.N))
+	plt.plot(range(100),[mu]*100,marker='o',color='cyan')
+	plt.plot(l1,l2,"v",color='purple')
+	plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
+	"""
+	plt.show()
 
 
 
 #g=Graphe(50,0.7)
 #drawSCE(g)
 
-popu = Population.Population(100,0.1,0.8,100)
+popu = Population.Population(50,0.1,0.8,100)
 
 
 
 
-simul=Simulation(popu,20,20)
+simul=Simulation(popu,100,20)
 result=simul.generation()
 
 x=range(len(result[0]))
