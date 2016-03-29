@@ -252,9 +252,11 @@ class Graphe:
 
 
                 
-
-"""                
+"""
+              
 g=Graphe(10,0.6)
+
+
 print (g.graphe)
 print ("sceDegree:",g.sceDegrees())
 print ("sceCk:",g.sceCk())
@@ -264,14 +266,14 @@ print ("calculCout" , g.calculCout())
 print "la matrice des plus courts chemins est",g.calcShortestPath()
 print g.SCESP()
 
-it = range(1,11)
+
+it = range(1,12)
 plt.plot(it,g.sceDegrees()[1],marker='o',color='cyan')
 plt.plot(it,g.sceDegrees()[2],marker='v',color='purple')
 plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
 #plt.legend([p1,p2],["Theorique","Observee"])
 plt.show()
-"""
-"""
+
 
 nodes = g.nodesAndEdges()[0]
 edges = g.nodesAndEdges()[1]
@@ -306,7 +308,7 @@ class Population:
 				
                 self.tailleGraphe = tailleGraphe
                 for i in range(self.p):
-					print i
+					#print i
 					self.population.append(Graphe(tailleGraphe,self.proba))
 					self.Wr[i]=self.Wr[i]/sum(self.Wr)
                        
@@ -495,32 +497,55 @@ class Simulation:
 
 
 
-popu = Population(100,0.9,100)
+popu = Population(50,0.9,50)
 
 
 
 
 
-simul=Simulation(popu,10,5)
+simul=Simulation(popu,50,5)
 simul.generation()
-"""
+
 g = simul.pop.population[0]
-print g
+#print g
 
 nodes = g.nodesAndEdges()[0]
 edges = g.nodesAndEdges()[1]
-print ("Edge",edges)
-print ("Nodes",nodes)
+#print ("Edge",edges)
+#print ("Nodes",nodes)
 
 
 G=nx.Graph()  
 G.add_nodes_from(nodes)
 G.add_edges_from(edges)
-print G.number_of_nodes()
-print G.number_of_edges()
+#print G.number_of_nodes()
+#print G.number_of_edges()
 nx.draw(G,node_color="pink") # ROSE bien evidemment ;)
 plt.show()
-"""
+
+#print g.sceDegrees()[1]
+
+
+
+it = range(1,51)
+
+#print len(it)
+distributionTheo = list(g.sceDegrees()[2])
+distributionTheo = distributionTheo[0:50]
+print len(distributionTheo)
+print len(g.sceDegrees()[1])
+
+
+plt.plot(it,g.sceDegrees()[1],marker='o',color='cyan')
+plt.plot(it,distributionTheo,marker='v',color='purple')
+plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
+#plt.legend([p1,p2],["Theorique","Observee"])
+plt.show()
+
+
+
+
+
 
 
 # for i in xrange(len(meilleurcout)):
@@ -552,9 +577,10 @@ temp=np.copy(temp2)
 		
 print d
 print temp
+'''
 
 #erreur qui survient de temps en temps
-
+'''
 Traceback (most recent call last):
   File "aggpGraphe.py", line 411, in <module>
     popu.croisement()
