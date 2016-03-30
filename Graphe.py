@@ -42,6 +42,7 @@ class Graphe:
                         deg[i]=0 #on met toutes les valeurs du dico a 0
                 for i in range(self.N):
                         deg[sum(self.graphe[i])]+=1
+                #print deg
                 
 
                 return deg
@@ -54,15 +55,15 @@ class Graphe:
                 #print ("deg",deg)
 
                 th=[0]*self.N
-                for i in range(1,self.N):
-                    
-                        th[i-1] = i**(-gamma)
-                #print (th)
-                c=sum(th)
-                
 
                 for i in range(1,self.N):
-                                        th[i-1]=th[i-1]/c
+                    th[i] = i**(-gamma)
+                c=sum(th)
+                #print c
+
+                for i in range(1,self.N):
+                    th[i]=th[i]/c
+
 
                 #print (th)
                 kmin=0
@@ -98,9 +99,12 @@ class Graphe:
                         dicoN[i]=[]
                 for i in range(self.N):
                         for j in range(self.N):
+                            if i != j:
                                 if self.graphe[i,j]==1:
                                         dicoN[i].append(j)
                 #print("dicoN:",dicoN)
+                #print self.graphe
+
 
                 #on stocke dans ni le nombres de liens entre les voisins d'un noeuds
                 for i in range(self.N):
@@ -258,6 +262,7 @@ class Graphe:
 			self.cout = cout
 
 			return cout
+
             
         def __str__(self):
             return self.nom                                
