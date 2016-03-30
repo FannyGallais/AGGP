@@ -73,17 +73,16 @@ class Simulation:
                         
 
 def drawSCE(g):
-	"""
+	
 	#sce DEGRES
 	plt.figure("Degres")
 	sceDeg=g.sceDegrees()
 	plt.plot(range(len(sceDeg[1])),sceDeg[1],marker='o',color='cyan')
 	plt.plot(range(len(sceDeg[2])),sceDeg[2],marker='v',color='purple')
 	plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
-	"""
+	
 
 	#sce Ck
-
 	plt.figure("Ck")
 	sceCk=g.sceCk()
 	plt.plot(range(1,len(sceCk[1])+1),sceCk[1],marker='o',color='cyan')
@@ -91,7 +90,7 @@ def drawSCE(g):
 	plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
 
 	
-	"""
+	
 	#sce SP
 	plt.figure("Shortest Path")
 	sceSP=g.SCESP()[1]
@@ -101,7 +100,7 @@ def drawSCE(g):
 	plt.plot(range(100),[mu]*100,marker='o',color='cyan')
 	plt.plot(l1,l2,"v",color='purple')
 	plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
-	"""
+	
 
 
 	plt.show()
