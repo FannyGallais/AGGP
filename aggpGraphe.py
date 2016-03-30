@@ -73,20 +73,22 @@ class Simulation:
                         
 
 def drawSCE(g):
+	"""
 	#sce DEGRES
 	plt.figure("Degres")
 	sceDeg=g.sceDegrees()
 	plt.plot(range(len(sceDeg[1])),sceDeg[1],marker='o',color='cyan')
 	plt.plot(range(len(sceDeg[2])),sceDeg[2],marker='v',color='purple')
 	plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
-
+	"""
+	
 	#sce Ck
 	plt.figure("Ck")
 	sceCk=g.sceCk()
-	plt.plot(range(len(sceCk[1])),sceCk[1],marker='o',color='cyan')
-	plt.plot(range(len(sceCk[2])),sceCk[2],marker='v',color='purple')
+	plt.plot(range(1,len(sceCk[1])+1),sceCk[1],marker='o',color='cyan')
+	plt.plot(range(1,len(sceCk[2])+1),sceCk[2],marker='v',color='purple')
 	plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
-
+	
 	"""
 	#sce SP
 	plt.figure("Shortest Path")
@@ -105,12 +107,12 @@ def drawSCE(g):
 #g=Graphe(50,0.7)
 #drawSCE(g)
 
-popu = Population.Population(50,0.1,0.8,100)
+popu = Population.Population(20,0.1,0.2,100)
 
 
 
 
-simul=Simulation(popu,100,20)
+simul=Simulation(popu,50,10)
 result=simul.generation()
 
 x=range(len(result[0]))

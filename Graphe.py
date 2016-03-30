@@ -131,7 +131,7 @@ class Graphe:
                                         somme=somme+Ci[j]
                                         k+=1
                         if k!=0:
-                                Ck[i]= somme/k
+                                Ck[i]= somme*1.0/k
                 #print "Dictionnaire",Ck
 
                 #print (Ck)
@@ -145,7 +145,8 @@ class Graphe:
 
                     sce+=(th[i+1]-Ck[i+1])**2
 
-                result = (sce,th,Ck.values())
+                result = (sce,th[1:],Ck.values()[1:])
+
                 return result
 
                 
@@ -242,21 +243,21 @@ class Graphe:
                 
         def calculCout(self,a=1,b=1,c=1):
 
-                #On recupere les differents couts des differentes methodes
-                sce1 = self.sceDegrees()[0]
-                sce2 = self.sceCk()[0]
-                #print ("erreur SCESP()[0]:",self.SCESP())
-                sce3 = self.SCESP()
-                #print "sceDeg",sce1,"sceCk",sce2,"sceSP",sce3
-                #print sce1,sce2,sce3
+			#On recupere les differents couts des differentes methodes
+			#sce1 = self.sceDegrees()[0]
+			sce2 = self.sceCk()[0]
+			#print ("erreur SCESP()[0]:",self.SCESP())
+			#sce3 = self.SCESP()
+			#print "sceDeg",sce1,"sceCk",sce2,"sceSP",sce3
+			#print sce1,sce2,sce3
 
-                #On les ajoute entre elles
-                cout = (a*sce1)+(b*sce2)+(c*sce3)
+			#On les ajoute entre elles
+			#cout = (a*sce1)+(b*sce2)+(c*sce3)
+			cout=sce2
+			#On met a jour le cout du graphe
+			self.cout = cout
 
-                #On met a jour le cout du graphe
-                self.cout = cout
-
-                return cout
+			return cout
             
         def __str__(self):
             return self.nom                                
