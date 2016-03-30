@@ -74,30 +74,31 @@ class Simulation:
 
 def drawSCE(g):
 	#sce DEGRES
-	plt.figure("Degres")
-	sceDeg=g.sceDegrees()
-	plt.plot(range(len(sceDeg[1])),sceDeg[1],marker='o',color='cyan')
-	plt.plot(range(len(sceDeg[2])),sceDeg[2],marker='v',color='purple')
-	plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
-
+	# plt.figure("Degres")
+	# sceDeg=g.sceDegrees()
+	# plt.plot(range(len(sceDeg[1])),sceDeg[1],marker='o',color='cyan')
+	# plt.plot(range(len(sceDeg[2])),sceDeg[2],marker='v',color='purple')
+	# plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
+    
 	#sce Ck
+
 	plt.figure("Ck")
 	sceCk=g.sceCk()
 	plt.plot(range(len(sceCk[1])),sceCk[1],marker='o',color='cyan')
 	plt.plot(range(len(sceCk[2])),sceCk[2],marker='v',color='purple')
 	plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
 
-	"""
-	#sce SP
-	plt.figure("Shortest Path")
-	sceSP=g.SCESP()[1]
-	l1=sorted(sceSP.keys())
-	l2=sceSP.values()
-	mu=np.log(np.log(g.N))
-	plt.plot(range(100),[mu]*100,marker='o',color='cyan')
-	plt.plot(l1,l2,"v",color='purple')
-	plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
-	"""
+	
+	# #sce SP
+	# plt.figure("Shortest Path")
+	# sceSP=g.SCESP()[1]
+	# l1=sorted(sceSP.keys())
+	# l2=sceSP.values()
+	# mu=np.log(np.log(g.N))
+	# plt.plot(range(100),[mu]*100,marker='o',color='cyan')
+	# plt.plot(l1,l2,"v",color='purple')
+	# plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
+	# """
 	plt.show()
 
 
@@ -105,19 +106,19 @@ def drawSCE(g):
 #g=Graphe(50,0.7)
 #drawSCE(g)
 
-popu = Population.Population(50,0.1,0.8,100)
+popu = Population.Population(50,0.1,0.8,30)
 
 
 
 
-simul=Simulation(popu,100,20)
+simul=Simulation(popu,150,20)
 result=simul.generation()
 
-x=range(len(result[0]))
-plt.figure("figure 1")
-plt.plot(x,result[0],color="red")
-plt.plot(x,result[1],color="blue")
-plt.show()
+# x=range(len(result[0]))
+# plt.figure("figure 1")
+# plt.plot(x,result[0],color="red")
+# plt.plot(x,result[1],color="blue")
+# plt.show()
 
 g = simul.pop.population[0]
 drawSCE(g)
@@ -130,8 +131,8 @@ plt.figure("figure 2")
 G=nx.Graph()  
 G.add_nodes_from(nodes)
 G.add_edges_from(edges)
-print (G.number_of_nodes())
-print (G.number_of_edges())
+#print (G.number_of_nodes())
+#print (G.number_of_edges())
 nx.draw(G,node_color="pink") # ROSE bien evidemment ;)
 plt.show()
 
