@@ -94,12 +94,13 @@ def drawSCE(g):
 	#sce SP
 	plt.figure("Shortest Path")
 	sceSP=g.SCESP()[1]
-	l1=sorted(sceSP.keys())
+	l1=(sceSP.keys())
 	l2=sceSP.values()
 	mu=np.log(np.log(g.N))
-	plt.plot(range(100),[mu]*100,marker='o',color='cyan')
-	plt.plot(l1,l2,"v",color='purple')
+	plt.plot(l1,2.0*np.asarray(l2)/(g.N*(g.N-1)),marker="v",color='purple')
+	plt.plot([mu]*100,np.asarray(range(100))/100.0,marker='o',color='cyan')
 	plt.title("Distribution theorique de la somme des carres des ecarts / Distibution observee")
+	plt.show()
 	
 
 
@@ -110,7 +111,7 @@ def drawSCE(g):
 #g=Graphe(50,0.7)
 #drawSCE(g)
 
-popu = Population.Population(20,0.1,0.2,100)
+popu = Population.Population(20,0.1,0.2,50)
 
 
 simul=Simulation(popu,50,10)

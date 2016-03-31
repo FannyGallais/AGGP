@@ -4,25 +4,39 @@ import random
 import matplotlib.pyplot as plt
 class Graphe:
         def __init__(self,tailleGraphe,p,name,g=0):
-                self.N=tailleGraphe
-                self.cout= random.randint(0,self.N) # En attendant d'avoir le vrai cout
-                self.connexe= False
-                self.nom=name
-                self.p=p
-                if g==0:
-                        self.graphe=np.zeros((self.N,self.N))
-                        while self.connexe==False:
-							for i in range(self.N):
-									for j in range(i,self.N):
-											if random.random()<p and i != j:
-													self.graphe[i,j]=1
-													self.graphe[j,i]=1
-							self.connexe=self.isConnexe()
-                                        #pour verifier que les deux methodes isConnexe donnent les memes resultats
-                        
-                else:
-                        self.graphe=np.copy(g.graphe)
-        
+			self.N=tailleGraphe
+			self.cout= random.randint(0,self.N) # En attendant d'avoir le vrai cout
+			self.connexe= False
+			self.nom=name
+			self.p=p
+			if g==0:
+					self.graphe=np.zeros((self.N,self.N))
+					while self.connexe==False:
+						for i in range(self.N):
+								for j in range(i,self.N):
+										if random.random()<p and i != j:
+												self.graphe[i,j]=1
+												self.graphe[j,i]=1
+						self.connexe=self.isConnexe()
+									#pour verifier que les deux methodes isConnexe donnent les memes resultats
+					
+			else:
+					self.graphe=np.copy(g.graphe)
+					
+			self.thDeg=[0]*self.N
+			self.thDeg[0]=10
+			gamma=2.5
+			for i in range(1,self.N):
+				self.thDeg[i] = i**(-gamma)
+			c=sum(self.thDeg)
+			for i in range(1,self.N):
+				self.thDeg[i]=self.thDeg[i]/c
+					
+			self.thCk = []
+			self.thCk.append(0)
+			for i in range(self.N):
+				self.thCk.append(1/float((i+1)))
+	
 
         def nodesAndEdges(self):
             nodes = []
@@ -51,40 +65,41 @@ class Graphe:
 
         
         def sceDegrees(self,gamma=2.5):
-                deg = self.degrees()
-                #print ("deg",deg)
+			deg = self.degrees()
+			#print ("deg",deg)
 
-                th=[0]*self.N
+			"""
+			th=[0]*self.N
 
-                for i in range(1,self.N):
-                    th[i] = i**(-gamma)
-                c=sum(th)
-                #print c
+			for i in range(1,self.N):
+				th[i] = i**(-gamma)
+			c=sum(th)
+			#print c
 
-                for i in range(1,self.N):
-                    th[i]=th[i]/c
+			for i in range(1,self.N):
+				th[i]=th[i]/c
+			"""
 
+			#print (th)
+			kmin=0
+			kmax=self.N-1
+			# i=0
+			# while deg[i]==0:
+			#         kmin+=1
+			#         i+=1
+			# i=self.N-1
+			# while deg[i]==0:
+			#         kmax-=1
+			#         i-=1
+					
+			sce=0
+			for i in range(kmin,kmax):
+					sce+=(self.thDeg[i]-(deg[i]/self.N))**2
+			
+			degObs = np.asarray(list(deg.values()))*(1/float(self.N))
+			#print "deg",degObs
 
-                #print (th)
-                kmin=0
-                kmax=self.N-1
-                # i=0
-                # while deg[i]==0:
-                #         kmin+=1
-                #         i+=1
-                # i=self.N-1
-                # while deg[i]==0:
-                #         kmax-=1
-                #         i-=1
-                        
-                sce=0
-                for i in range(kmin,kmax):
-                        sce+=(th[i]-(deg[i]/self.N))**2
-                
-                degObs = np.asarray(list(deg.values()))*(1/float(self.N))
-                #print "deg",degObs
-
-                return (sce,th,degObs)
+			return (sce,self.thDeg,degObs)
 
 
         
@@ -140,16 +155,16 @@ class Graphe:
 
                 #print (Ck)
                 sce=0
-                th = []
-                th.append(0)
+
+                #th = []
+                #th.append(0)
                
 
                 for i in range(len(Ck)-1):
-                    th.append(1/float((i+1)))
+                    #th.append(1/float((i+1)))
+                    sce+=(self.thCk[i+1]-Ck[i+1])**2
 
-                    sce+=(th[i+1]-Ck[i+1])**2
-
-                result = (sce,th[1:],Ck.values()[1:])
+                result = (sce,self.thCk[1:],Ck.values()[1:])
 
                 return result
 
@@ -239,8 +254,7 @@ class Graphe:
             cost=0
             for lg in d.keys():
                 cost+=abs(float(lg)-mu)*float(d[lg])/float(self.N)
-            results=(cost,d)
-            return cost
+            return (cost,d)
             
                 
 
@@ -251,7 +265,7 @@ class Graphe:
 			sce1 = self.sceDegrees()[0]
 			sce2 = self.sceCk()[0]
 			#print ("erreur SCESP()[0]:",self.SCESP())
-			sce3 = self.SCESP()
+			sce3 = self.SCESP()[0]
 			#print "sceDeg",sce1,"sceCk",sce2,"sceSP",sce3
 			#print sce1,sce2,sce3
 
